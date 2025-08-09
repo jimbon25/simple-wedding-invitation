@@ -1,0 +1,48 @@
+.progressive-img-container {
+  overflow: hidden;
+  position: relative;
+  background-color: #f0f0f0; /* Fallback background color */
+}
+
+.progressive-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    filter 0.5s ease-out,
+    transform 0.3s ease-out;
+}
+
+.progressive-img.loading {
+  filter: blur(10px);
+  transform: scale(1.05); /* Slightly larger to cover blurred edges */
+}
+
+.progressive-img.loaded {
+  filter: blur(0);
+  transform: scale(1);
+}
+
+/* Optional: Skeleton pulse animation for extra visual feedback */
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.progressive-img-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #e0e0e0;
+  animation: pulse 1.5s infinite;
+  z-index: -1;
+}

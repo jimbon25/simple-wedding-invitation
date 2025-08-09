@@ -1,0 +1,247 @@
+.cover-screen.fade-out {
+  animation: fadeOutCover 0.6s forwards;
+}
+
+@keyframes fadeOutCover {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+.cover-button-estetik {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.18rem;
+  padding: 0.75em 2.2em;
+  border-radius: 32px;
+  background: linear-gradient(
+    120deg,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(255, 255, 255, 0.25) 100%
+  );
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  box-shadow:
+    0 4px 18px rgba(85, 107, 47, 0.1),
+    0 1px 4px rgba(85, 107, 47, 0.1);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.18s,
+    box-shadow 0.18s,
+    background 0.18s,
+    color 0.18s;
+  outline: none;
+  margin-top: 1.8rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background-clip: padding-box;
+}
+.cover-button-estetik:hover {
+  background: #a0522d;
+  color: #fff;
+  transform: scale(1.06);
+  box-shadow:
+    0 8px 28px rgba(85, 107, 47, 0.18),
+    0 2px 8px rgba(85, 107, 47, 0.12);
+}
+.cover-button-text {
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: color 0.2s;
+}
+@media (max-width: 600px) {
+  .cover-button-estetik {
+    font-size: 1rem;
+    padding: 0.5em 1em;
+    border-radius: 24px;
+  }
+}
+@keyframes shimmerText {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.animated-subtitle {
+  font-size: 1.3rem;
+  letter-spacing: 3px;
+  color: #fff;
+  text-shadow:
+    0 2px 8px #111,
+    0 1px 2px #222;
+  animation: fadeInUp 1.2s ease;
+}
+.animated-title {
+  font-size: 3.2rem;
+  font-family: "Pacifico", cursive, sans-serif;
+  color: #fff;
+  text-shadow:
+    0 4px 16px #111,
+    0 2px 4px #222;
+  animation: fadeInUp 1.5s ease;
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.floating-gif {
+  position: absolute;
+  width: 200px;
+  height: auto;
+  pointer-events: none;
+  z-index: 10001;
+  will-change: transform;
+}
+
+@keyframes floatY0 {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-22px);
+  }
+}
+@keyframes floatY1 {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-37px);
+  }
+}
+@keyframes floatY2 {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-51px);
+  }
+}
+@keyframes floatY3 {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-44px);
+  }
+}
+@keyframes rotateGif0 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotateGif1 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes rotateGif2 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotateGif3 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .floating-gif {
+    width: 120px;
+  }
+}
+
+@keyframes floatY {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-40px);
+  }
+}
+@keyframes floatX {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: 20px;
+  }
+}
+@keyframes rotateGif {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes floatY {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-30px);
+  }
+}
+@keyframes floatX {
+  0% {
+    left: 48%;
+  }
+  100% {
+    left: 52%;
+  }
+}
+
+.cover-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+  text-align: center;
+}
+
+.cover-content {
+  padding: 20px;
+  background: none;
+  position: relative;
+  z-index: 10002;
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+}

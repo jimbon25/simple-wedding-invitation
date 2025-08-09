@@ -1,0 +1,116 @@
+/* LoadingScreen.css */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  z-index: 9999;
+  transition: opacity 0.5s ease-out;
+}
+
+.loading-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-heart {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.heart {
+  width: 40px;
+  height: 40px;
+  background-color: #9caf88;
+  transform: rotate(-45deg);
+  animation: pulse 1.5s ease infinite;
+  position: relative;
+}
+
+.heart:before,
+.heart:after {
+  content: "";
+  width: 40px;
+  height: 40px;
+  background-color: #9caf88;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.heart:before {
+  top: -20px;
+  left: 0;
+}
+
+.heart:after {
+  top: 0;
+  left: 20px;
+}
+
+.progress-container {
+  width: 200px;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 25px auto 15px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #9caf88;
+  transition: width 0.3s ease-in-out;
+  border-radius: 4px;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #555;
+  margin-top: 15px;
+}
+
+.loading-title {
+  margin-bottom: 20px;
+  font-family: cursive;
+  color: #9caf88;
+  font-size: 1.8rem;
+}
+
+/* Animation keyframes */
+@keyframes pulse {
+  0% {
+    transform: rotate(-45deg) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: rotate(-45deg) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-45deg) scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* Dark mode support */
+.dark-mode .loading-screen {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.dark-mode .loading-text {
+  color: #ddd;
+}
+
+.dark-mode .progress-container {
+  background: #444;
+}

@@ -1,0 +1,73 @@
+{
+  "name": "simple-wedding-invitation",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.126",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "aos": "^2.3.4",
+    "bootstrap": "^5.3.7",
+    "bootstrap-icons": "^1.13.1",
+    "lottie-react": "^2.4.1",
+    "node-fetch": "^2.6.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-google-recaptcha": "^3.1.0",
+    "react-router-dom": "^6.22.3",
+    "react-scripts": "^5.0.1",
+    "react-slick": "^0.30.3",
+    "slick-carousel": "^1.8.1",
+    "typescript": "^4.9.5",
+    "ua-parser-js": "^2.0.4",
+    "uuid": "^9.0.1",
+    "web-vitals": "^2.1.4",
+    "yet-another-react-lightbox": "^3.24.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "test": "react-scripts test",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "prettier": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "eject": "react-scripts eject",
+    "vercel-build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "generate-thumbnails": "node scripts/generate-thumbnails.js",
+    "prebuild": "npm run generate-thumbnails"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/aos": "^3.0.7",
+    "@types/react-google-recaptcha": "^2.1.9",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/react-slick": "^0.23.13",
+    "@types/uuid": "^9.0.8",
+    "prettier": "^3.6.2",
+    "sharp": "^0.33.2"
+  },
+  "engines": {
+    "node": ">=16.0.0 <=20.x"
+  }
+}

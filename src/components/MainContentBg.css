@@ -1,0 +1,29 @@
+.main-content-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background:
+    radial-gradient(
+      ellipse 120% 80% at 50% 0%,
+      #b7c9a8cc 0%,
+      #e0e8d4cc 60%,
+      transparent 100%
+    ),
+    linear-gradient(180deg, #b7c9a8 0%, #e0e8d4 100%);
+  /* Blur effect */
+  filter: blur(0px);
+  position: relative;
+  z-index: 0;
+  transition: background 0.5s;
+}
+
+body.dark-mode .main-content-bg {
+  background:
+    linear-gradient(rgba(30, 40, 30, 0.45), rgba(30, 40, 30, 0.45)),
+    radial-gradient(
+      ellipse 120% 80% at 50% 0%,
+      #5d6f4acc 0%,
+      #8fa98acc 60%,
+      transparent 100%
+    ),
+    linear-gradient(180deg, #5d6f4a 0%, #8fa98a 100%);
+}
