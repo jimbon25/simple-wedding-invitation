@@ -6,7 +6,6 @@ import { useLanguage } from "../utils/LanguageContext";
 import { getApiEndpoint } from "../utils/apiUtils";
 import { TransText } from "../utils/TransitionComponents";
 
-
 const GuestBook: React.FC = () => {
   const { t, language } = useLanguage();
   const [name, setName] = useState("");

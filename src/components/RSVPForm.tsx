@@ -13,7 +13,9 @@ const RSVPForm: React.FC = () => {
   const [foodPreference, setFoodPreference] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
+    null,
+  );
   const [showToast, setShowToast] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
   // State for validation errors
@@ -63,7 +65,6 @@ const RSVPForm: React.FC = () => {
       setGuestsError("Jumlah tamu harus lebih dari 0.");
       isValid = false;
     }
-
 
     if (!isValid) {
       setIsSubmitting(false);
