@@ -184,6 +184,15 @@ const GuestBook: React.FC = () => {
             style={{ display: "none" }}
             aria-hidden="true"
           />
+          {/* Honeypot field tambahan */}
+          <input
+            type="text"
+            name="contact_number"
+            tabIndex={-1}
+            autoComplete="off"
+            style={{ display: "none" }}
+            aria-hidden="true"
+          />
           <div className="mb-3">
             <label
               htmlFor="guestName"
