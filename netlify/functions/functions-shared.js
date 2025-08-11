@@ -54,10 +54,9 @@ exports.sharedHandler = async function(event, context) {
     };
   }
 
-  let token, name, message, attendance, guests, foodPreference, type;
+  let name, message, attendance, guests, foodPreference, type;
   try {
     const body = JSON.parse(event.body);
-    token = body.token || body.recaptchaToken;
     name = escapeMarkdown(String(body.name || body.nama || ''));
     message = escapeMarkdown(String(body.message || body.pesan || ''));
     attendance = escapeMarkdown(String(body.attendance || body.kehadiran || ''));
@@ -124,25 +123,13 @@ exports.sharedHandler = async function(event, context) {
     return { statusCode: 405, headers: corsHeaders, body: 'Method Not Allowed' };
   }
 
-  const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
-  if (!RECAPTCHA_SECRET_KEY) {
-    return { statusCode: 500, headers: corsHeaders, body: 'reCAPTCHA secret key not configured.' };
-  }
+  // ...existing code...
 
 
   // ...existing code...
 
   try {
-    // 1. Verifikasi reCAPTCHA
-    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${RECAPTCHA_SECRET_KEY}&response=${token}`
-    });
-    const data = await response.json();
-    if (!data.success) {
-      return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ success: false, ...data }) };
-    }
+  // ...existing code...
 
     // 2. Telegram message format (triple backtick)
     let telegramText = '';
@@ -255,6 +242,6 @@ exports.sharedHandler = async function(event, context) {
 
     return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true }) };
   } catch (error) {
-    return { statusCode: 500, headers: corsHeaders, body: 'Failed to verify reCAPTCHA or send message.' };
+    return { statusCode: 500, headers: corsHeaders, body: 'Failed to send message.' };
   }
 };
