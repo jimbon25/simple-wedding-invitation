@@ -33,21 +33,33 @@ const GiftInfo: React.FC = () => {
     <div>
       <StoryItem>
         <h2 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <span className="bi bi-gift-fill" style={{ fontSize: "2rem", color: "#9CAF88" }}></span>
+          <span
+            className="bi bi-gift-fill"
+            style={{ fontSize: "2rem", color: "#9CAF88" }}
+          ></span>
           <InViewTransition animationType="slide-down">
             {content.title}
           </InViewTransition>
         </h2>
-        <div style={{ width: "100%", display: "flex", justifyContent: "center", margin: "16px 0 12px 0" }}>
-          <hr style={{
-            border: "none",
-            height: "3px",
-            width: "70%",
-            maxWidth: "420px",
-            background: "#7a8c6a",
-            borderRadius: "2px",
-            boxShadow: "0 2px 8px rgba(122,140,106,0.18)"
-          }} />
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            margin: "16px 0 12px 0",
+          }}
+        >
+          <hr
+            style={{
+              border: "none",
+              height: "3px",
+              width: "70%",
+              maxWidth: "420px",
+              background: "#7a8c6a",
+              borderRadius: "2px",
+              boxShadow: "0 2px 8px rgba(122,140,106,0.18)",
+            }}
+          />
         </div>
       </StoryItem>
       <StoryItem delay="0.2s">
