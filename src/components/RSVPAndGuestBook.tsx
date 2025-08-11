@@ -119,11 +119,24 @@ const RSVPAndGuestBook: React.FC = () => {
   return (
     <div id="rsvp-guestbook">
       <StoryItem>
-        <h1>
+        <h1 style={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+          <span className="bi bi-check-circle-fill" style={{ fontSize: "2rem", color: "#9CAF88" }}></span>
+          <span className="bi bi-journal-text" style={{ fontSize: "2rem", color: "#9CAF88" }}></span>
           <InViewTransition animationType="slide-down">
             {`${t("rsvp_title")} & ${t("guestbook_title")}`}
           </InViewTransition>
         </h1>
+        <div style={{ width: "100%", display: "flex", justifyContent: "center", margin: "16px 0 12px 0" }}>
+          <hr style={{
+            border: "none",
+            height: "3px",
+            width: "70%",
+            maxWidth: "420px",
+            background: "#7a8c6a",
+            borderRadius: "2px",
+            boxShadow: "0 2px 8px rgba(122,140,106,0.18)"
+          }} />
+        </div>
       </StoryItem>
       <StoryItem delay="0.2s">
         <div className="social-community-container text-center mb-3">
