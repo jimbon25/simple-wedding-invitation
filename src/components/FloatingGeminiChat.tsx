@@ -1,4 +1,6 @@
 import React, { useState, lazy, Suspense } from "react";
+import Lottie from "lottie-react";
+import robotAnimation from "../assets/chatbot.json";
 // Lazy load GeminiChat component
 const GeminiChat = lazy(() => import("./GeminiChat"));
 
@@ -13,52 +15,35 @@ const FloatingGeminiChat: React.FC<FloatingGeminiChatProps> = ({
 
   return (
     <>
-      {/* Floating Gemini Icon Button */}
+      {/* Floating Gemini Icon Button (Lottie Robot) */}
       <button
         onClick={() => setOpen((o) => !o)}
         style={{
           position: "fixed",
-          right: 24,
-          bottom: 24,
+          right: 8,
+          bottom: 8,
           zIndex: 9999,
-          background: darkMode ? "#232d2b" : "#fff",
-          border: darkMode ? "2.5px solid #EEE" : "2.5px solid #9CAF88",
+          background: "none",
+          border: "none",
           borderRadius: "50%",
-          width: 56,
-          height: 56,
-          boxShadow: darkMode
-            ? "0 2px 12px rgba(30,30,30,0.18)"
-            : "0 2px 12px rgba(156,175,136,0.18)",
+          width: 140,
+          height: 140,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
           transition: "box-shadow 0.2s",
           animation: "floatGemini 2.5s ease-in-out infinite alternate",
+          outline: "none",
+          boxShadow: "none",
         }}
-        aria-label="Buka chat Gemini"
+        aria-label="Buka chat AI"
       >
-        {/* Gemini Icon SVG */}
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-          <circle cx="16" cy="16" r="16" fill="#9CAF88" />
-          <ellipse
-            cx="16"
-            cy="16"
-            rx="10"
-            ry="6"
-            fill={darkMode ? "#232d2b" : "#fff"}
-            fillOpacity="0.85"
-          />
-          <ellipse
-            cx="16"
-            cy="16"
-            rx="6"
-            ry="10"
-            fill={darkMode ? "#232d2b" : "#fff"}
-            fillOpacity="0.7"
-          />
-          <circle cx="16" cy="16" r="4.5" fill="#9CAF88" />
-        </svg>
+        <Lottie
+          animationData={robotAnimation}
+          loop={true}
+          style={{ width: 128, height: 128, background: "none" }}
+        />
       </button>
       {/* Bubble Chat */}
       {open && (
@@ -128,6 +113,16 @@ const FloatingGeminiChat: React.FC<FloatingGeminiChatProps> = ({
       )}
       {/* Animations */}
       <style>{`
+        @media (max-width: 600px) {
+          button[aria-label="Buka chat AI"] {
+            width: 90px !important;
+            height: 90px !important;
+          }
+          button[aria-label="Buka chat AI"] .lottie {
+            width: 80px !important;
+            height: 80px !important;
+          }
+        }
         @keyframes floatGemini {
           0% { transform: translateY(0); }
           100% { transform: translateY(-16px); }
