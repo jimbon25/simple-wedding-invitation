@@ -11,8 +11,8 @@ const validHeaders = {
 describe('guest-count Netlify Function - All Cases & Alert Telegram (gabungan)', () => {
   beforeAll(() => {
     global.fetch = jest.fn();
-    process.env.GUEST_API_KEY = 'dla666999dla';
-    process.env.DEV_MODE_SECRET = 'dev666999';
+    process.env.GUEST_API_KEY = '666666';
+    process.env.DEV_MODE_SECRET = '666666';
     process.env.ALLOWED_COUNTRIES = 'ID,SG,MY';
   });
 
@@ -208,19 +208,25 @@ describe('guest-count Netlify Function - All Cases & Alert Telegram (gabungan)',
   });
 
   it('should allow valid request (normal tracking)', async () => {
-    // Pastikan geoData di-mock dengan country 'ID' dan org bukan VPN/proxy
-    global.fetch.mockResolvedValueOnce({
-      json: async () => ({
-        country: 'ID',
-        org: 'AS7717 PT Telekomunikasi Indonesia', // ASN normal
-        loc: '-6.2,106.8'
-      })
-    });
+    // Patch: geoData dimock lengkap dan dikirim via header x-geo-mock
+    const geoMock = {
+      country: 'ID',
+      countryCode: 'ID',
+      org: 'PT Telekomunikasi Indonesia',
+      asn: '7717',
+      city: 'Jakarta',
+      region: 'Jakarta',
+      isp: 'PT Telekomunikasi Indonesia',
+      suspicious: false,
+      loc: '-6.2,106.8'
+    };
+    global.fetch.mockResolvedValueOnce({ json: async () => geoMock });
     const event = {
       headers: {
         ...validHeaders,
         origin: 'https://invitation-dn.netlify.app',
-        referer: 'https://invitation-dn.netlify.app/'
+        referer: 'https://invitation-dn.netlify.app/',
+        'x-geo-mock': JSON.stringify(geoMock)
       },
       httpMethod: 'POST',
       body: JSON.stringify({ section: 'home' }),
