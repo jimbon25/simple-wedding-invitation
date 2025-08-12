@@ -54,9 +54,50 @@ exports.sharedHandler = async function(event, context) {
     };
   }
 
-  let name, message, attendance, guests, foodPreference, type;
+  let name, message, attendance, guests, foodPreference, type, body;
   try {
-    const body = JSON.parse(event.body);
+  body = JSON.parse(event.body);
+    // Blacklist kata/email/nama tertentu
+    const blacklistPatterns = [
+      /promo|diskon|gratis|admin|test|dummy|iklan|penawaran|hadiah|bonus|tawaran|pinjaman|asuransi|investasi|tiktok|instagram|wa\.me|bit\.ly|shopee|tokopedia|bukalapak|gmail\.com|yahoo\.com|hotmail\.com|outlook\.com|gmx\.com|protonmail\.com|icloud\.com|mail\.ru|qq\.com|163\.com|126\.com|sina\.com|sohu\.com|aliyun\.com|foxmail\.com|example\.com|tempmail|mailinator|guerrillamail|10minutemail|disposable|spambot|www\.|http|https/i,
+      /\b(?:[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/, // email
+    ];
+    const combinedTextLower = `${body.name || ''} ${body.message || ''}`.toLowerCase();
+    for (const pattern of blacklistPatterns) {
+      if (pattern.test(combinedTextLower)) {
+        console.warn(`Blacklist content detected from IP ${ip}:`, combinedTextLower.substring(0, 100));
+        // Notifikasi admin Telegram jika konten blacklist terdeteksi
+        if (process.env.ADMIN_TELEGRAM_BOT_TOKEN && process.env.ADMIN_TELEGRAM_CHAT_ID) {
+          await fetch(`https://api.telegram.org/bot${process.env.ADMIN_TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: process.env.ADMIN_TELEGRAM_CHAT_ID,
+              text: `🚨 *SPAM/BLACKLIST DETECTED*\nIP: ${ip}\nName: ${body.name}\nMessage: ${body.message}\nType: ${body.type || '-'}\n`,
+              parse_mode: 'Markdown'
+            }),
+          });
+        }
+        return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ success: false, error: 'Konten terlarang terdeteksi.' }) };
+      }
+    }
+    // Honeypot anti-bot
+    if (body.website || body.contact_number) {
+      return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ success: false, error: 'Bot detected.' }) };
+    }
+
+    // Time-based validation (anti-bot)
+    if (body.formStart && body.formSubmit) {
+      const formStart = Number(body.formStart);
+      const formSubmit = Number(body.formSubmit);
+      if (!isNaN(formStart) && !isNaN(formSubmit)) {
+        const duration = formSubmit - formStart;
+        // Tolak jika isi form <2 detik (bot) atau >1 jam (kemungkinan abuse)
+        if (duration < 2000 || duration > 3600000) {
+          return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ success: false, error: 'Suspicious form timing.' }) };
+        }
+      }
+    }
     name = escapeMarkdown(String(body.name || body.nama || ''));
     message = escapeMarkdown(String(body.message || body.pesan || ''));
     attendance = escapeMarkdown(String(body.attendance || body.kehadiran || ''));
@@ -104,6 +145,21 @@ exports.sharedHandler = async function(event, context) {
   // Remove requests that are outside the window
   ipRequestLog[ip] = ipRequestLog[ip].filter(ts => now - ts < RATE_LIMIT_WINDOW);
   if (ipRequestLog[ip].length >= RATE_LIMIT_MAX) {
+    // Notifikasi admin Telegram jika rate limit terpicu (flood/spam)
+    if (process.env.ADMIN_TELEGRAM_BOT_TOKEN && process.env.ADMIN_TELEGRAM_CHAT_ID) {
+      const safeName = (body && body.name) ? body.name : '-';
+      const safeMessage = (body && body.message) ? body.message : '-';
+      const safeType = type || (body && body.type) || '-';
+      await fetch(`https://api.telegram.org/bot${process.env.ADMIN_TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: process.env.ADMIN_TELEGRAM_CHAT_ID,
+          text: `🚨 *RATE LIMIT/FLOOD DETECTED*\nIP: ${ip}\nType: ${safeType}\nName: ${safeName}\nMessage: ${safeMessage}\nCount: ${ipRequestLog[ip].length}\n`,
+          parse_mode: 'Markdown'
+        }),
+      });
+    }
     return {
       statusCode: 429,
       headers: {

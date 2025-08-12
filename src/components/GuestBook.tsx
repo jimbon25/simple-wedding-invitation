@@ -22,6 +22,8 @@ const GuestBook: React.FC = () => {
   const [nameError, setNameError] = useState("");
   const [messageError, setMessageError] = useState("");
 
+  const [formStart] = useState(Date.now());
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Honeypot anti-bot
@@ -68,15 +70,17 @@ const GuestBook: React.FC = () => {
     }
 
     // Payload for backend
+    const formSubmit = Date.now();
     const payload = {
       type: "guestbook",
       name: name.trim(),
       message: message.trim(),
+      formStart,
+      formSubmit,
     };
 
     // Get appropriate API endpoint based on environment
     const endpoint = getApiEndpoint("send-notification");
-
     try {
       const response = await fetch(endpoint, {
         method: "POST",

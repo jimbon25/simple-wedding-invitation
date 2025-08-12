@@ -6,6 +6,7 @@ import { useLanguage } from "../utils/LanguageContext";
 import { getApiEndpoint } from "../utils/apiUtils";
 import { TransText } from "../utils/TransitionComponents";
 const RSVPForm: React.FC = () => {
+  const [formStart] = useState(Date.now());
   const { t, language } = useLanguage();
   const [name, setName] = useState("");
   const [attendance, setAttendance] = useState("");
@@ -71,6 +72,7 @@ const RSVPForm: React.FC = () => {
       return;
     }
 
+    const formSubmit = Date.now();
     const payload = {
       type: "rsvp",
       name: name.trim(),
@@ -78,6 +80,8 @@ const RSVPForm: React.FC = () => {
       guests,
       foodPreference,
       message: message.trim(),
+      formStart,
+      formSubmit,
     };
 
     // Get appropriate API endpoint based on environment

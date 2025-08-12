@@ -334,8 +334,20 @@ exports.handler = async function(event, context) {
   try {
     const body = JSON.parse(event.body);
     // Honeypot (optional)
-    if (body.website) {
+    if (body.website || body.contact_number) {
       return { statusCode: 400, headers: corsHeaders, body: 'Bot detected.' };
+    }
+    // Time-based validation (anti-bot)
+    if (body.formStart && body.formSubmit) {
+      const formStart = Number(body.formStart);
+      const formSubmit = Number(body.formSubmit);
+      if (!isNaN(formStart) && !isNaN(formSubmit)) {
+        const duration = formSubmit - formStart;
+        // Tolak jika isi form <2 detik (bot) atau >1 jam (kemungkinan abuse)
+        if (duration < 2000 || duration > 3600000) {
+          return { statusCode: 400, headers: corsHeaders, body: 'Suspicious form timing.' };
+        }
+      }
     }
   } catch (e) {
     return { statusCode: 400, headers: corsHeaders, body: 'Invalid JSON' };
