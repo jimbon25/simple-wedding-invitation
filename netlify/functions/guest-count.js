@@ -57,14 +57,6 @@ exports.handler = async function(event, context) {
     'Vary': 'Origin'
   };
 
-  // API Key validation (optional, for more private endpoint)
-  const apiKey = event.headers['x-api-key'];
-  const pentestRateKey = process.env.PENTEST_RATE_KEY || 'PENTEST-RATE-KEY';
-  const isPentestRateKey = apiKey === pentestRateKey;
-  if (apiKey !== process.env.GUEST_API_KEY && !isPentestRateKey) {
-    return { statusCode: 403, headers: corsHeaders, body: 'Forbidden' };
-  }
-
   // Origin/Referer validation
   if (origin && !isAllowedOrigin) {
     return { statusCode: 403, headers: corsHeaders, body: 'Invalid origin' };
@@ -90,28 +82,44 @@ exports.handler = async function(event, context) {
       body: ''
     };
   }
-  
+
+  // API Key validation hanya untuk request admin (reset)
+  const apiKey = event.headers['x-api-key'];
+  const pentestRateKey = process.env.PENTEST_RATE_KEY || 'PENTEST-RATE-KEY';
+  const isPentestRateKey = apiKey === pentestRateKey;
+
   // Handle admin reset request (for testing)
   if (event.httpMethod === 'POST') {
     try {
       const body = JSON.parse(event.body || '{}');
       if (body.action === 'reset_history') {
-        if (resetVisitorHistory(event)) {
-          return {
-            statusCode: 200,
-            headers: corsHeaders,
-            body: JSON.stringify({ 
-              success: true, 
-              message: 'Visitor history reset successfully' 
-            })
-          };
+        if (apiKey === process.env.GUEST_API_KEY || isPentestRateKey) {
+          if (resetVisitorHistory(event)) {
+            return {
+              statusCode: 200,
+              headers: corsHeaders,
+              body: JSON.stringify({ 
+                success: true, 
+                message: 'Visitor history reset successfully' 
+              })
+            };
+          } else {
+            return {
+              statusCode: 403,
+              headers: corsHeaders,
+              body: JSON.stringify({ 
+                success: false, 
+                message: 'Unauthorized reset attempt' 
+              })
+            };
+          }
         } else {
           return {
             statusCode: 403,
             headers: corsHeaders,
             body: JSON.stringify({ 
               success: false, 
-              message: 'Unauthorized reset attempt' 
+              message: 'API key required for admin action' 
             })
           };
         }
