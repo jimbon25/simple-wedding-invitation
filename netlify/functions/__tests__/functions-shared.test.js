@@ -1,5 +1,4 @@
 // netlify/functions/__tests__/functions-shared.test.js
-const { sharedHandler } = require('../functions-shared');
 
 describe('functions-shared Netlify Function - All Cases', () => {
   beforeAll(() => {
@@ -41,6 +40,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
     }
 
   it('should block empty body', async () => {
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',
@@ -52,6 +55,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
   });
 
   it('should block invalid JSON', async () => {
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',
@@ -64,6 +71,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
 
   it('should block blacklist content', async () => {
     global.fetch.mockResolvedValueOnce({ ok: true });
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',
@@ -75,6 +86,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
   });
 
   it('should block honeypot bot', async () => {
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',
@@ -86,6 +101,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
   });
 
   it('should block suspicious timing', async () => {
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const now = Date.now();
     const event = {
       headers: validHeaders,
@@ -98,6 +117,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
   });
 
   it('should block name too long', async () => {
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',
@@ -109,6 +132,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
   });
 
   it('should block message too long', async () => {
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',
@@ -120,6 +147,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
   });
 
   it('should block suspicious content', async () => {
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',
@@ -131,6 +162,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
   });
 
   it('should block GET method', async () => {
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'GET',
@@ -142,6 +177,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
 
   it('should block rate limit', async () => {
     global.fetch.mockResolvedValue({ ok: true });
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',
@@ -158,6 +197,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
 
   it('should allow valid RSVP request', async () => {
     global.fetch.mockResolvedValue({ ok: true });
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',
@@ -170,6 +213,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
 
   it('should allow valid guestbook request', async () => {
     global.fetch.mockResolvedValue({ ok: true });
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',
@@ -181,6 +228,10 @@ describe('functions-shared Netlify Function - All Cases', () => {
   });
 
   it('should allow visit type (tracking disabled)', async () => {
+    jest.resetModules();
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) }));
+    const { ipRequestLog, sharedHandler } = require('../functions-shared');
+    for (const ip in ipRequestLog) delete ipRequestLog[ip];
     const event = {
       headers: validHeaders,
       httpMethod: 'POST',

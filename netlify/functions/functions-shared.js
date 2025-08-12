@@ -284,7 +284,9 @@ exports.sharedHandler = async function(event, context) {
     }
 
     if (!telegramResult.ok || !discordResult.ok) {
-      return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ success: false, error: 'Failed to send to Telegram or Discord' }) };
+  console.error('Failed to send to Telegram or Discord');
+  // Tetap return sukses agar user tidak terganggu
+  return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true, warning: 'Notifikasi gagal dikirim ke Telegram/Discord' }) };
     }
 
     return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true }) };
