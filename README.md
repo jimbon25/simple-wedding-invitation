@@ -1,8 +1,5 @@
 # Simple Wedding Invitation
 
-> **Note:** This version does not use Google reCAPTCHA or any captcha. All anti-spam and bot protection is handled by backend logic (honeypot, blacklist, time-based validation, rate limiting, and admin notification).
-> **Security Notice:** If you discover any vulnerability in this project, please contact the author: jimbonluis90@gmail.com
-
 <p align="center">
   <a href="https://app.netlify.com/projects/invitation-dn/deploys">
     <img src="https://api.netlify.com/api/v1/badges/a3d51b63-c999-4e01-823f-b52ee8e7b7a4/deploy-status" alt="Netlify Status" height="120" />
@@ -46,18 +43,14 @@
   </a>
 </p>
 
-A digital wedding invitation web app built with React and TypeScript. This application provides a seamless, interactive experience for wedding guests with multi-language support, smooth animations, and robust security features. It includes personalized invitations, RSVP and guest book functionality protected by Google reCAPTCHA, real-time notification integration with Discord and Telegram, advanced visitor analytics with suspect session, and an GEMINI AI to assist your guests.
 
 <p align="center">
 <img src="public/images/screenshoot/ss1.webp" width="500" alt="Screenshot 1"/>
 <img src="public/images/screenshoot/ss2.webp" width="500" alt="Screenshot 2"/>
 </p>
+<p align="center">
 <img src="public/images/screenshoot/ss3.webp" width="500" alt="Screenshot 3"/>
 </p>
-
-
-
-
 
 ### Environment Variables
 
@@ -86,3 +79,6 @@ Set these environment variables on your hosting platform:
 ## Disclaimer
 
 This project is provided as-is, without any warranty. Use at your own risk. The author is not responsible for any issues, damages, or losses resulting from the use, deployment, or modification of this code. Please review and test thoroughly before deploying to production.
+
+> **Note:** This version does not use Google reCAPTCHA or any captcha. All anti-spam and bot protection is handled by backend logic (honeypot, blacklist, time-based validation, rate limiting, and admin notification).
+> **Security Notice:** If you discover any vulnerability in this project, please contact the author: jimbonluis90@gmail.com

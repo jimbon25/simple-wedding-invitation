@@ -73,7 +73,7 @@ exports.sharedHandler = async function(event, context) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               chat_id: process.env.ADMIN_TELEGRAM_CHAT_ID,
-              text: `🚨 *SPAM/BLACKLIST DETECTED*\nIP: ${ip}\nName: ${body.name}\nMessage: ${body.message}\nType: ${body.type || '-'}\n`,
+              text: `⚠ *SPAM/BLACKLIST DETECTED*\nIP: ${ip}\nName: ${body.name}\nMessage: ${body.message}\nType: ${body.type || '-'}\n`,
               parse_mode: 'Markdown'
             }),
           });
