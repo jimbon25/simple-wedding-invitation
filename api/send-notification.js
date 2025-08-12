@@ -110,7 +110,6 @@ export default async function handler(req, res) {
     });
   }
   
-  // ...existing code...
 
   // Log info about the request source
   console.log(`Request from: ${req.headers['x-forwarded-for'] || 'unknown'}`);

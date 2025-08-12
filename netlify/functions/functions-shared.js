@@ -1,5 +1,5 @@
 // netlify/functions/functions-shared.js
-// This file contains the main code used by send-notification.js and verify-recaptcha.js
+// This file contains the main code used by send-notification.js
 const fetch = require('node-fetch');
 
 // Simple in-memory rate limiter (per instance, not global)
@@ -173,19 +173,13 @@ exports.sharedHandler = async function(event, context) {
   }
   ipRequestLog[ip].push(now);
 
-  // ...moved to top...
 
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers: corsHeaders, body: 'Method Not Allowed' };
   }
 
-  // ...existing code...
-
-
-  // ...existing code...
 
   try {
-  // ...existing code...
 
     // 2. Telegram message format (triple backtick)
     let telegramText = '';
