@@ -56,7 +56,7 @@ exports.sharedHandler = async function(event, context) {
 
   let name, message, attendance, guests, foodPreference, type, body;
   try {
-  body = JSON.parse(event.body);
+    body = JSON.parse(event.body);
     // Blacklist kata/email/nama tertentu
     const blacklistPatterns = [
       /promo|diskon|gratis|admin|test|dummy|iklan|penawaran|hadiah|bonus|tawaran|pinjaman|asuransi|investasi|tiktok|instagram|wa\.me|bit\.ly|shopee|tokopedia|bukalapak|gmail\.com|yahoo\.com|hotmail\.com|outlook\.com|gmx\.com|protonmail\.com|icloud\.com|mail\.ru|qq\.com|163\.com|126\.com|sina\.com|sohu\.com|aliyun\.com|foxmail\.com|example\.com|tempmail|mailinator|guerrillamail|10minutemail|disposable|spambot|www\.|http|https/i,
@@ -173,14 +173,11 @@ exports.sharedHandler = async function(event, context) {
   }
   ipRequestLog[ip].push(now);
 
-
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers: corsHeaders, body: 'Method Not Allowed' };
   }
 
-
   try {
-
     // 2. Telegram message format (triple backtick)
     let telegramText = '';
     if (type === 'rsvp') {
@@ -295,3 +292,6 @@ exports.sharedHandler = async function(event, context) {
     return { statusCode: 500, headers: corsHeaders, body: 'Failed to send message.' };
   }
 };
+
+// Ekspor ipRequestLog agar bisa diakses dan direset dari test
+exports.ipRequestLog = ipRequestLog;
