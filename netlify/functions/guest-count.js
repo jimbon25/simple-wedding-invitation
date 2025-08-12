@@ -254,20 +254,30 @@ exports.handler = async function(event, context) {
   try {
     const ipInfoToken = process.env.IPINFO_TOKEN;
     if (ipInfoToken && ip !== 'unknown' && ip !== '127.0.0.1' && ip !== 'localhost') {
-      const ipInfoResponse = await fetch(`https://ipinfo.io/${ip}?token=${ipInfoToken}`);
-      const ipInfo = await ipInfoResponse.json();
-      if (ipInfo) {
-        geoData = {
-          country: ipInfo.country || 'Unknown',
-          countryCode: ipInfo.country || 'XX',
-          city: ipInfo.city || 'Unknown',
-          region: ipInfo.region || 'Unknown',
-          asn: ipInfo.org ? ipInfo.org.split(' ')[0].replace('AS', '') : 'Unknown',
-          org: ipInfo.org ? ipInfo.org.split(' ').slice(1).join(' ') : 'Unknown',
-          isp: ipInfo.org || 'Unknown',
-          suspicious: false,
-          loc: ipInfo.loc || null
-        };
+      // Tambahkan timeout 2 detik pada fetch ipinfo.io
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 2000); // 2 detik
+      try {
+        const ipInfoResponse = await fetch(`https://ipinfo.io/${ip}?token=${ipInfoToken}`, { signal: controller.signal });
+        const ipInfo = await ipInfoResponse.json();
+        if (ipInfo) {
+          geoData = {
+            country: ipInfo.country || 'Unknown',
+            countryCode: ipInfo.country || 'XX',
+            city: ipInfo.city || 'Unknown',
+            region: ipInfo.region || 'Unknown',
+            asn: ipInfo.org ? ipInfo.org.split(' ')[0].replace('AS', '') : 'Unknown',
+            org: ipInfo.org ? ipInfo.org.split(' ').slice(1).join(' ') : 'Unknown',
+            isp: ipInfo.org || 'Unknown',
+            suspicious: false,
+            loc: ipInfo.loc || null
+          };
+        }
+      } catch (e) {
+        console.warn('GeoIP fetch timeout atau error:', e);
+        // Biarkan geoData default jika timeout/error
+      } finally {
+        clearTimeout(timeout);
       }
     }
     // Patch: support geoData mocking in tests
