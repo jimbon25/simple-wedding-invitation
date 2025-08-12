@@ -52,7 +52,6 @@ A digital wedding invitation web app built with React and TypeScript. This appli
 <img src="public/images/screenshoot/ss1.webp" width="500" alt="Screenshot 1"/>
 <img src="public/images/screenshoot/ss2.webp" width="500" alt="Screenshot 2"/>
 </p>
-<p align="center">
 <img src="public/images/screenshoot/ss3.webp" width="500" alt="Screenshot 3"/>
 </p>
 
