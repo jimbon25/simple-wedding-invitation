@@ -11,6 +11,9 @@ const validHeaders = {
 describe('guest-count Netlify Function - All Cases & Alert Telegram (gabungan)', () => {
   beforeAll(() => {
     global.fetch = jest.fn();
+    process.env.GUEST_API_KEY = 'dla666999dla';
+    process.env.DEV_MODE_SECRET = 'dev666999';
+    process.env.ALLOWED_COUNTRIES = 'ID,SG,MY';
   });
 
   afterAll(() => {
@@ -56,7 +59,12 @@ describe('guest-count Netlify Function - All Cases & Alert Telegram (gabungan)',
 
   it('should allow reset history with valid API key', async () => {
     const event = {
-      headers: { ...validHeaders, 'x-api-key': process.env.GUEST_API_KEY },
+      headers: {
+        ...validHeaders,
+        origin: 'https://invitation-dn.netlify.app',
+        referer: 'https://invitation-dn.netlify.app/',
+        'x-api-key': process.env.GUEST_API_KEY
+      },
       httpMethod: 'POST',
       body: JSON.stringify({ action: 'reset_history' }),
       queryStringParameters: {}
@@ -79,9 +87,13 @@ describe('guest-count Netlify Function - All Cases & Alert Telegram (gabungan)',
   });
 
   it('should allow developer mode', async () => {
-    const devSecret = process.env.DEV_MODE_SECRET || 'dev666';
+    const devSecret = process.env.DEV_MODE_SECRET || 'dev666999';
     const event = {
-      headers: { ...validHeaders, referer: `https://invitation-dn.netlify.app/?devMode=${devSecret}` },
+      headers: {
+        ...validHeaders,
+        origin: 'https://invitation-dn.netlify.app',
+        referer: `https://invitation-dn.netlify.app/?devMode=${devSecret}`
+      },
       httpMethod: 'POST',
       body: '{}',
       queryStringParameters: {}
@@ -196,13 +208,26 @@ describe('guest-count Netlify Function - All Cases & Alert Telegram (gabungan)',
   });
 
   it('should allow valid request (normal tracking)', async () => {
+    // Pastikan geoData di-mock dengan country 'ID' dan org bukan VPN/proxy
+    global.fetch.mockResolvedValueOnce({
+      json: async () => ({
+        country: 'ID',
+        org: 'AS7717 PT Telekomunikasi Indonesia', // ASN normal
+        loc: '-6.2,106.8'
+      })
+    });
     const event = {
-      headers: validHeaders,
+      headers: {
+        ...validHeaders,
+        origin: 'https://invitation-dn.netlify.app',
+        referer: 'https://invitation-dn.netlify.app/'
+      },
       httpMethod: 'POST',
       body: JSON.stringify({ section: 'home' }),
       queryStringParameters: { to: 'Tamu Undangan' }
     };
     const result = await handler(event, {});
+    expect(result.statusCode).toBe(200);
     expect(result.body).toContain('Welcome');
   });
 });
