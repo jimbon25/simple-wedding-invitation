@@ -18,12 +18,13 @@
 
 body.dark-mode .main-content-bg {
   background:
-    linear-gradient(rgba(30, 40, 30, 0.45), rgba(30, 40, 30, 0.45)),
+    linear-gradient(rgba(18, 20, 20, 0.85), rgba(18, 20, 20, 0.85)),
     radial-gradient(
       ellipse 120% 80% at 50% 0%,
-      #5d6f4acc 0%,
-      #8fa98acc 60%,
+      #3a4d36cc 0%,
+      #4e5e4acc 60%,
       transparent 100%
     ),
-    linear-gradient(180deg, #5d6f4a 0%, #8fa98a 100%);
+    linear-gradient(180deg, #2c3a2a 0%, #4e5e4a 100%);
+  /* Overlay hitam lebih pekat agar sage green tidak terlalu terang */
 }

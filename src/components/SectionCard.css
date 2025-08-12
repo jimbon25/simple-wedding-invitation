@@ -1,8 +1,58 @@
+/* Fix gallery slider arrow position so it stays inside the card/section */
+.gallery-slider .slick-prev {
+  left: 8px !important;
+  z-index: 2;
+}
+.gallery-slider .slick-next {
+  right: 8px !important;
+  z-index: 2;
+}
+@media (max-width: 768px) {
+  .gallery-slider .slick-prev {
+    left: 2px !important;
+  }
+  .gallery-slider .slick-next {
+    right: 2px !important;
+  }
+}
+
+/* Section Divider: gunakan <div className="section-divider" /> di antara card */
+.section-divider {
+  width: 80%;
+  height: 2px;
+  margin: 32px auto;
+  border: none;
+  border-radius: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--card-border1, #b7c9a8),
+    var(--card-border2, #e0e8d4)
+  );
+  opacity: 0.7;
+  transition: background 0.3s;
+}
+[data-theme="dark"] .section-divider {
+  background: linear-gradient(
+    90deg,
+    var(--card-border1, #6a7c5c),
+    var(--card-border2, #b7c9a8)
+  );
+  opacity: 0.5;
+}
 .section-card-animate {
   opacity: 0.45;
   transform: translateY(72px) scale(0.95);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(156, 175, 136, 0.04);
+  box-shadow: 0 8px 32px var(--card-shadow, rgba(0, 0, 0, 0.16));
+  border: 1px solid transparent;
+  border-image: linear-gradient(
+      90deg,
+      var(--card-border1, #b7c9a8),
+      var(--card-border2, #e0e8d4)
+    )
+    1;
+  backdrop-filter: blur(8px);
+  background: var(--card-bg, rgba(255, 255, 255, 0.15));
   transition:
     opacity 1.85s cubic-bezier(0.22, 1, 0.36, 1),
     transform 1.85s cubic-bezier(0.22, 1, 0.36, 1),
@@ -13,5 +63,32 @@
   opacity: 1;
   transform: translateY(0) scale(1);
   border-radius: 24px;
-  box-shadow: 0 4px 32px rgba(156, 175, 136, 0.1);
+  box-shadow: 0 16px 48px var(--card-shadow, rgba(0, 0, 0, 0.22));
+}
+
+/* Accent line di atas card, tambahkan di JSX: <div className="card-accent" /> */
+.card-accent {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--card-border1, #b7c9a8),
+    var(--card-border2, #e0e8d4)
+  );
+  margin: 0 auto 12px auto;
+}
+
+/* Support dark mode & light mode dengan CSS variable di global/root */
+:root {
+  --card-shadow: rgba(0, 0, 0, 0.16);
+  --card-border1: #b7c9a8;
+  --card-border2: #e0e8d4;
+  --card-bg: rgba(255, 255, 255, 0.15);
+}
+[data-theme="dark"] {
+  --card-shadow: rgba(0, 0, 0, 0.44);
+  --card-border1: #6a7c5c;
+  --card-border2: #b7c9a8;
+  --card-bg: rgba(32, 32, 32, 0.25);
 }
