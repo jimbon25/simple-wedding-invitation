@@ -163,12 +163,12 @@ exports.handler = async function(event, context) {
   if (!userAgent || userAgent.length < 10) {
     return { statusCode: 400, headers: corsHeaders, body: 'Invalid User-Agent' };
   }
-  // Detect strange User-Agents (bots, curls, headless, etc.) - don't block, mark suspicious.
+  // Detect strange User-Agents (bots, curls, headless, etc.) - hanya tandai suspicious, jangan blokir
   const suspiciousUA = /(bot|curl|python|wget|scrapy|headless|phantom|selenium|spider|httpclient|axios|go-http|node-fetch|java|libwww|perl|ruby|powershell|http_request|httpclient|fetch|postman|insomnia)/i;
   let suspiciousUAFlag = false;
   if (suspiciousUA.test(userAgent)) {
     suspiciousUAFlag = true;
-    // Later geoData.suspicious will be set to true after geoData is filled
+    // Hanya tandai, jangan blokir
     console.log('Suspicious User-Agent detected:', userAgent);
   }
   const parser = new UAParser(userAgent);
@@ -377,11 +377,17 @@ exports.handler = async function(event, context) {
   // Query String/Parameter Anomaly Detection (SQLi/XSS/etc)
   // Detect strange characters/patterns in guestParam (or other parameters if needed)
   if (guestParam && guestParam !== '-') {
-    // Uncommon non-alphanumeric characters, or simple XSS/SQLi patterns
+    // Uncommon non-alphanumeric characters, atau pola XSS/SQLi
     if (/[^a-zA-Z0-9 _-]/.test(guestParam) || /<|script|\{|\}|\$|\(|\)|select|union|insert|update|delete|drop|--|\/\*/i.test(guestParam)) {
       geoData.suspicious = true;
       suspiciousReason.push(`Query string/parameter mencurigakan: ${guestParam}`);
       console.log('Suspicious query string/parameter detected:', guestParam);
+      // Langsung blokir request
+      return {
+        statusCode: 403,
+        headers: corsHeaders,
+        body: 'Access denied: Suspicious query string or guest parameter.'
+      };
     }
   }
 
@@ -503,22 +509,6 @@ exports.handler = async function(event, context) {
           body: 'Access denied: Country not allowed or please turn off your VPN or proxy to access this invitation.'
         };
       }
-      // Block if suspicious reason includes suspicious query string/parameter
-      if (suspiciousReason.some(reason => reason.includes('Query string/parameter mencurigakan'))) {
-        return {
-          statusCode: 403,
-          headers: corsHeaders,
-          body: 'Access denied: Suspicious query string or guest parameter.'
-        };
-      }
-      // Block if User-Agent is suspicious
-      if (suspiciousReason.some(reason => reason.includes('User-Agent mencurigakan'))) {
-        return {
-          statusCode: 403,
-          headers: corsHeaders,
-          body: 'Access denied: Suspicious User-Agent detected.'
-        };
-      }
       // Block if country is not allowed
       if (suspiciousReason.some(reason => reason.includes('Negara tidak diizinkan'))) {
         return {
@@ -527,6 +517,8 @@ exports.handler = async function(event, context) {
           body: 'Access denied: Country not allowed or please turn off your VPN or proxy to access this invitation.'
         };
       }
+      // Untuk suspicious query string dan User-Agent, hanya alert, jangan blokir
+      // Request tetap diterima (status 200)
     }
   } catch (err) {
     console.error('Failed to send visitor info to Telegram:', err);
