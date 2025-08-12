@@ -45,9 +45,16 @@ const SUSPICIOUS_ASNS = [
 ];
 
 exports.handler = async function(event, context) {
-  const allowedOrigin = 'https://invitation-dn.netlify.app/'; // Replace with your invitation domain
+  const allowedOrigins = [
+    'https://invitation-dn.netlify.app',
+    'https://invitation-dn.netlify.app/'
+    // Tambahkan domain lain jika perlu
+  ];
+  const origin = event.headers['origin'] || '';
+  const referer = event.headers['referer'] || '-';
+  const isAllowedOrigin = allowedOrigins.some(o => origin.startsWith(o));
   const corsHeaders = {
-    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Origin': isAllowedOrigin ? origin : allowedOrigins[0],
     'Vary': 'Origin'
   };
 
@@ -60,12 +67,10 @@ exports.handler = async function(event, context) {
   }
 
   // Origin/Referer validation
-  const origin = event.headers['origin'] || '';
-  const referer = event.headers['referer'] || '-';
-  if (origin && origin !== allowedOrigin) {
+  if (origin && !isAllowedOrigin) {
     return { statusCode: 403, headers: corsHeaders, body: 'Invalid origin' };
   }
-  if (referer !== '-' && !referer.startsWith(allowedOrigin)) {
+  if (referer !== '-' && !allowedOrigins.some(o => referer.startsWith(o))) {
     return { statusCode: 403, headers: corsHeaders, body: 'Invalid referer' };
   }
 
@@ -343,7 +348,7 @@ exports.handler = async function(event, context) {
     guestParam = event.queryStringParameters['to'];
   } else {
     try {
-      const url = new URL(event.headers.referer || '', allowedOrigin);
+      const url = new URL(event.headers.referer || '', allowedOrigins[0]);
       guestParam = url.searchParams.get('to') || '-';
     } catch (e) {
       // ignore
