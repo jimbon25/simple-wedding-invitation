@@ -11,9 +11,9 @@ const validHeaders = {
 describe('guest-count Netlify Function - All Cases & Alert Telegram (gabungan)', () => {
   beforeAll(() => {
     global.fetch = jest.fn();
-    process.env.GUEST_API_KEY = '';
-    process.env.DEV_MODE_SECRET = '';
-    process.env.ALLOWED_COUNTRIES = '';
+    process.env.GUEST_API_KEY = 'dla666999dla';
+    process.env.DEV_MODE_SECRET = 'dev666999';
+    process.env.ALLOWED_COUNTRIES = 'ID,SG,MY';
   });
 
   afterAll(() => {
