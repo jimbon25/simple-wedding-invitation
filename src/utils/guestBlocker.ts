@@ -17,7 +17,7 @@ export async function checkGuestBlock(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.REACT_APP_GUEST_API_KEY || "invitation666999", // replace with your own API key
+        "x-api-key": process.env.REACT_APP_GUEST_API_KEY || "",
       },
       body: JSON.stringify({}),
     });

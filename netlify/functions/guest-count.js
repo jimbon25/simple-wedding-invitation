@@ -122,23 +122,23 @@ exports.handler = async function(event, context) {
   }
   
   // Secret parameter for developer mode
-  const DEV_MODE_SECRET = 'your_secret_key'; // set your own secret here
+  const DEV_MODE_SECRET = process.env.DEV_MODE_SECRET || ''; // gunakan environment variable, default kosong
 
   // Check if request is from developer based on URL parameter
   try {
     if (referer && referer !== '-') {
       const urlObj = new URL(referer);
       const devMode = urlObj.searchParams.get('devMode');
-      if (devMode === DEV_MODE_SECRET) {
-        console.log('Dev mode detected from URL parameter, tracking skipped');
-        return { 
-          statusCode: 200, 
-          headers: corsHeaders,
-          body: JSON.stringify({ 
-            success: true, 
-            message: 'Developer mode active, tracking skipped' 
-          })
-        };
+        if (DEV_MODE_SECRET && devMode === DEV_MODE_SECRET) {
+          console.log('Dev mode terdeteksi dari parameter URL, tracking dilewati');
+          return { 
+            statusCode: 200, 
+            headers: corsHeaders,
+            body: JSON.stringify({ 
+              success: true, 
+              message: 'Developer mode aktif, tracking dilewati' 
+            })
+          };
       }
     }
   } catch (e) {
