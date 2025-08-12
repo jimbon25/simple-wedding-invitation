@@ -27,7 +27,7 @@ exports.sharedHandler = async function(event, context) {
   
   // Replace with your invitation domain
   const allowedOrigins = [
-    'https://your-site.netlify.app',
+    'https://invitation-dn.netlify.app/',
     process.env.REACT_APP_SITE_URL,
     'http://localhost:3000' // for development
   ].filter(Boolean);

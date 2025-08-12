@@ -45,7 +45,7 @@ const SUSPICIOUS_ASNS = [
 ];
 
 exports.handler = async function(event, context) {
-  const allowedOrigin = 'https://your-site.netlify.app'; // Replace with your invitation domain
+  const allowedOrigin = 'https://invitation-dn.netlify.app/'; // Replace with your invitation domain
   const corsHeaders = {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Vary': 'Origin'
