@@ -46,9 +46,17 @@ exports.handler = async function(event, context) {
     'Vary': 'Origin'
   };
 
-  // Origin/Referer validation
+  // Validasi origin/referer harus paling atas
   if (origin && !isAllowedOrigin) {
     return { statusCode: 403, headers: corsHeaders, body: 'Invalid origin' };
+  }
+  if (referer !== '-' && !allowedOrigins.some(o => referer.startsWith(o))) {
+    return { statusCode: 403, headers: corsHeaders, body: 'Invalid referer' };
+  }
+
+  // Validasi body size sebelum parsing JSON
+  if ((event.body || '').length > 2048) {
+    return { statusCode: 413, headers: corsHeaders, body: 'Payload too large' };
   }
   // API Key validation untuk request admin (reset)
   const apiKey = event.headers['x-api-key'] || event.headers['X-Api-Key'] || '';
