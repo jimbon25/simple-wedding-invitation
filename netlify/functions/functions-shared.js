@@ -165,7 +165,7 @@ exports.sharedHandler = async function(event, context) {
       headers: {
         'Content-Type': 'application/json',
         'Retry-After': String(Math.ceil((RATE_LIMIT_WINDOW - (now - ipRequestLog[ip][0])) / 1000)),
-        'Access-Control-Allow-Origin': 'https://your-site.netlify.app',
+        'Access-Control-Allow-Origin': 'https://invitation-dn.netlify.app',
         'Vary': 'Origin'
       },
       body: JSON.stringify({ success: false, error: 'Terlalu banyak permintaan dari IP ini. Coba lagi nanti.' })

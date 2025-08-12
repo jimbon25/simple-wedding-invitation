@@ -27,8 +27,7 @@ const resetVisitorHistory = (req) => {
 
 // List of allowed countries (ISO country codes)
 // Add countries allowed to access the invitation
-const ALLOWED_COUNTRIES = ['ID']; 
-
+const ALLOWED_COUNTRIES = ['ID', 'SG', 'MY']; 
 // List of suspicious ASNs (Autonomous System Numbers)
 // Usually used by VPN, proxy, or similar services
 const SUSPICIOUS_ASNS = [
