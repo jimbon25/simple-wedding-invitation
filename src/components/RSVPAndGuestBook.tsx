@@ -117,7 +117,21 @@ const RSVPAndGuestBook: React.FC = () => {
   }, [showModal]);
 
   return (
-    <div id="rsvp-guestbook">
+    <div
+      id="rsvp-guestbook"
+      className="rsvp-guestbook-section"
+      style={{
+        background: "rgba(154, 175, 136, 0.18)",
+        backdropFilter: "blur(8px)",
+        border: "none",
+        borderRadius: "24px",
+        boxShadow: "none",
+        outline: "none",
+        margin: 0,
+        padding: "24px",
+        transition: "background 0.3s",
+      }}
+    >
       <StoryItem>
         <div
           style={{

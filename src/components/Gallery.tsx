@@ -128,7 +128,20 @@ const Gallery: React.FC = () => {
   };
 
   return (
-    <div className="mb-5">
+    <div
+      className="gallery-section mb-5"
+      style={{
+        background: "rgba(154, 175, 136, 0.18)",
+        backdropFilter: "blur(8px)",
+        border: "none",
+        borderRadius: "24px",
+        boxShadow: "none",
+        outline: "none",
+        margin: 0,
+        padding: "24px",
+        transition: "background 0.3s",
+      }}
+    >
       <StoryItem>
         <h2 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <span
