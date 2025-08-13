@@ -50,10 +50,24 @@ const EventDetails: React.FC = () => {
     };
     const month = monthMap[monthName];
 
-    const [time, ampm] = weddingTimeText.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
-    if (ampm === "PM" && hours < 12) hours += 12;
-    if (ampm === "AM" && hours === 12) hours = 0; // Midnight
+    // Parse jam dan menit
+    let hours = 10;
+    let minutes = 0;
+    let ampm = "AM";
+    if (language === "en") {
+      // Format: "10:00 AM - End"
+      const timeParts = weddingTimeText.split(" ")[0].split(":");
+      hours = parseInt(timeParts[0], 10);
+      minutes = parseInt(timeParts[1], 10);
+      ampm = weddingTimeText.split(" ")[1];
+      if (ampm === "PM" && hours < 12) hours += 12;
+      if (ampm === "AM" && hours === 12) hours = 0;
+    } else {
+      // Format: "10:00 WIB - Selesai"
+      const timeParts = weddingTimeText.split(" ")[0].split(":");
+      hours = parseInt(timeParts[0], 10);
+      minutes = parseInt(timeParts[1], 10);
+    }
 
     const startDate = new Date(
       Number(year),
@@ -97,7 +111,7 @@ const EventDetails: React.FC = () => {
       <StoryItem>
         <h2 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <span
-            className="bi bi-calendar-event-fill"
+            className="bi bi-calendar-event-fill section-icon-pulse"
             style={{ fontSize: "2rem", color: "#9CAF88" }}
           ></span>
           <InViewTransition animationType="slide-down">
@@ -111,19 +125,7 @@ const EventDetails: React.FC = () => {
             justifyContent: "center",
             margin: "16px 0 12px 0",
           }}
-        >
-          <hr
-            style={{
-              border: "none",
-              height: "3px",
-              width: "70%",
-              maxWidth: "420px",
-              background: "#7a8c6a",
-              borderRadius: "2px",
-              boxShadow: "0 2px 8px rgba(122,140,106,0.18)",
-            }}
-          />
-        </div>
+        ></div>
       </StoryItem>
 
       <style>{`

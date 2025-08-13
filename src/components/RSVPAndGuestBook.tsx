@@ -119,19 +119,51 @@ const RSVPAndGuestBook: React.FC = () => {
   return (
     <div id="rsvp-guestbook">
       <StoryItem>
-        <h1 style={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+        <div
+          style={{
+            display: "inline-flex",
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: "8px",
+            width: "100%",
+            justifyContent: "center",
+          }}
+        >
           <span
-            className="bi bi-check-circle-fill"
-            style={{ fontSize: "2rem", color: "#9CAF88" }}
+            className="bi bi-check-circle-fill section-icon-pulse"
+            style={{
+              fontSize: "2rem",
+              color: "#9CAF88",
+              marginRight: "8px",
+              lineHeight: 1,
+              verticalAlign: "middle",
+            }}
           ></span>
           <span
-            className="bi bi-journal-text"
-            style={{ fontSize: "2rem", color: "#9CAF88" }}
+            className="bi bi-journal-text section-icon-pulse"
+            style={{
+              fontSize: "2rem",
+              color: "#9CAF88",
+              marginRight: "12px",
+              lineHeight: 1,
+              verticalAlign: "middle",
+            }}
           ></span>
           <InViewTransition animationType="slide-down">
-            {`${t("rsvp_title")} & ${t("guestbook_title")}`}
+            <h1
+              style={{
+                fontSize: "2rem",
+                fontWeight: 700,
+                margin: 0,
+                textAlign: "center",
+                lineHeight: 1,
+                verticalAlign: "middle",
+              }}
+            >
+              {`${t("rsvp_title")} & ${t("guestbook_title")}`}
+            </h1>
           </InViewTransition>
-        </h1>
+        </div>
         <div
           style={{
             width: "100%",
@@ -139,19 +171,7 @@ const RSVPAndGuestBook: React.FC = () => {
             justifyContent: "center",
             margin: "16px 0 12px 0",
           }}
-        >
-          <hr
-            style={{
-              border: "none",
-              height: "3px",
-              width: "70%",
-              maxWidth: "420px",
-              background: "#7a8c6a",
-              borderRadius: "2px",
-              boxShadow: "0 2px 8px rgba(122,140,106,0.18)",
-            }}
-          />
-        </div>
+        ></div>
       </StoryItem>
       <StoryItem delay="0.2s">
         <div className="social-community-container text-center mb-3">

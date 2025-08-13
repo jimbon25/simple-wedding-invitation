@@ -84,7 +84,9 @@ const SectionCard: React.FC<SectionCardProps> = ({
         ...style,
       }}
     >
+      <div className="card-accent" />
       {children}
+      <div className="card-accent" />
     </div>
   );
 };

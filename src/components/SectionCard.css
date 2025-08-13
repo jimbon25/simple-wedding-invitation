@@ -1,3 +1,21 @@
+/* Pulse animation for section icon (blukutuk-blukutuk) */
+.section-icon-pulse {
+  animation: iconPulse 1.2s infinite;
+}
+@keyframes iconPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 /* Fix gallery slider arrow position so it stays inside the card/section */
 .gallery-slider .slick-prev {
   left: 8px !important;
@@ -25,9 +43,18 @@
   border-radius: 1px;
   background: linear-gradient(
     90deg,
-    var(--card-border1, #b7c9a8),
-    var(--card-border2, #e0e8d4)
+    rgba(122, 140, 106, 0.55) 0%,
+    rgba(183, 201, 168, 0.85) 50%,
+    rgba(224, 232, 212, 0.95) 100%
   );
+  [data-theme="dark"] .card-accent {
+    background: linear-gradient(
+      90deg,
+      rgba(106, 124, 92, 0.65) 0%,
+      rgba(183, 201, 168, 0.85) 50%,
+      rgba(224, 232, 212, 0.65) 100%
+    );
+  }
   opacity: 0.7;
   transition: background 0.3s;
 }
@@ -68,7 +95,9 @@
 
 /* Accent line di atas card, tambahkan di JSX: <div className="card-accent" /> */
 .card-accent {
-  width: 40px;
+  width: 60%;
+  min-width: 80px;
+  max-width: 320px;
   height: 4px;
   border-radius: 2px;
   background: linear-gradient(
@@ -76,7 +105,8 @@
     var(--card-border1, #b7c9a8),
     var(--card-border2, #e0e8d4)
   );
-  margin: 0 auto 12px auto;
+  margin: 0 auto 18px auto;
+  transition: width 0.3s;
 }
 
 /* Support dark mode & light mode dengan CSS variable di global/root */

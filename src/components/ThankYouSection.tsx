@@ -46,10 +46,7 @@ const ThankYouSection: React.FC = () => {
               marginBottom: 12,
             }}
           >
-            <span
-              className="bi bi-heart-fill"
-              style={{ fontSize: "2rem", color: "#9CAF88" }}
-            ></span>
+            <span style={{ fontSize: "2rem", color: "#9CAF88" }}></span>
             <InViewTransition animationType="slide-down">
               <TransText textKey="thank_you_title" animationType="fade" />
             </InViewTransition>
