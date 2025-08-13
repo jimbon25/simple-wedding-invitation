@@ -33,6 +33,7 @@
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
+    "test:backend": "jest netlify/functions/__tests__",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "prettier": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "eject": "react-scripts eject",
@@ -59,11 +60,15 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.28.0",
     "@types/aos": "^3.0.7",
     "@types/react-google-recaptcha": "^2.1.9",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-slick": "^0.23.13",
     "@types/uuid": "^9.0.8",
+    "babel-jest": "^30.0.5",
+    "jest": "^27.5.1",
+    "jest-fetch-mock": "^3.0.3",
     "prettier": "^3.6.2",
     "sharp": "^0.33.2"
   },

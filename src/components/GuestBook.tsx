@@ -1,13 +1,10 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState } from "react";
 import ToastNotification from "./ToastNotification";
 import StoryItem from "./StoryItem";
 import { SecurityUtils } from "../utils/security";
 import { useLanguage } from "../utils/LanguageContext";
 import { getApiEndpoint } from "../utils/apiUtils";
 import { TransText } from "../utils/TransitionComponents";
-
-// Lazy load ReCAPTCHA to improve initial load time
-const ReCAPTCHA = lazy(() => import("react-google-recaptcha"));
 
 const GuestBook: React.FC = () => {
   const { t, language } = useLanguage();
@@ -19,12 +16,13 @@ const GuestBook: React.FC = () => {
   );
   const [showToast, setShowToast] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [captchaError, setCaptchaError] = useState("");
+  // ...existing code...
 
   // State for validation errors
   const [nameError, setNameError] = useState("");
   const [messageError, setMessageError] = useState("");
+
+  const [formStart] = useState(Date.now());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +39,6 @@ const GuestBook: React.FC = () => {
     setSubmitStatus(null);
     setNameError("");
     setMessageError("");
-    setCaptchaError("");
 
     let isValid = true;
 
@@ -67,28 +64,23 @@ const GuestBook: React.FC = () => {
       isValid = false;
     }
 
-    if (!captchaToken) {
-      setCaptchaError("Mohon verifikasi captcha.");
-      setIsSubmitting(false);
-      return;
-    }
-
     if (!isValid) {
       setIsSubmitting(false);
       return;
     }
 
     // Payload for backend
+    const formSubmit = Date.now();
     const payload = {
       type: "guestbook",
       name: name.trim(),
       message: message.trim(),
-      token: captchaToken, // use the 'token' field for consistency with the backend
+      formStart,
+      formSubmit,
     };
 
     // Get appropriate API endpoint based on environment
     const endpoint = getApiEndpoint("send-notification");
-
     try {
       const response = await fetch(endpoint, {
         method: "POST",
@@ -113,7 +105,6 @@ const GuestBook: React.FC = () => {
         setToastMsg(t("guestbook_success"));
         setName("");
         setMessage("");
-        setCaptchaToken(null);
       } else if (response.status === 429) {
         setMessage(
           language === "en"
@@ -197,6 +188,15 @@ const GuestBook: React.FC = () => {
             style={{ display: "none" }}
             aria-hidden="true"
           />
+          {/* Honeypot field tambahan */}
+          <input
+            type="text"
+            name="contact_number"
+            tabIndex={-1}
+            autoComplete="off"
+            style={{ display: "none" }}
+            aria-hidden="true"
+          />
           <div className="mb-3">
             <label
               htmlFor="guestName"
@@ -255,37 +255,7 @@ const GuestBook: React.FC = () => {
               <div className="invalid-feedback">{messageError}</div>
             )}
           </div>
-          <div className="mb-3">
-            <Suspense
-              fallback={
-                <div
-                  className="d-flex align-items-center justify-content-center p-3 bg-light rounded"
-                  style={{ height: "78px", width: "302px" }}
-                >
-                  <div
-                    className="spinner-border spinner-border-sm text-secondary me-2"
-                    role="status"
-                  ></div>
-                  <span>Loading reCAPTCHA...</span>
-                </div>
-              }
-            >
-              <ReCAPTCHA
-                sitekey={
-                  process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
-                  "your_recaptcha_site_key"
-                }
-                onChange={(token: string | null) => {
-                  setCaptchaToken(token);
-                  setCaptchaError("");
-                }}
-                asyncScriptOnLoad={() => console.log("reCAPTCHA loaded")}
-              />
-            </Suspense>
-            {captchaError && (
-              <div className="text-danger mt-2">{captchaError}</div>
-            )}
-          </div>
+          {/* ...existing code... */}
           <button
             type="submit"
             className="btn btn-primary"

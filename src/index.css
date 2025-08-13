@@ -1,3 +1,16 @@
+body.dark-mode .form-control,
+body.dark-mode .form-select,
+body.dark-mode textarea {
+  background: #232627;
+  color: #eee;
+  border-color: #7a8c6a;
+}
+
+body.dark-mode .form-control::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #aaa;
+  opacity: 1;
+}
 /* Section Separator Fade-in Animation */
 .section-separator {
   opacity: 0;

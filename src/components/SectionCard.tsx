@@ -66,8 +66,8 @@ const SectionCard: React.FC<SectionCardProps> = ({
         borderRadius: fullWidth ? 0 : 24,
         border: darkMode
           ? "1.2px solid rgba(255,255,255,0.13)"
-          : "1.2px solid rgba(0,0,0,0.08)",
-        background: darkMode ? "rgba(24,26,27,0.98)" : "#fff",
+          : "1.8px solid #7a8c6a",
+        background: darkMode ? "rgba(24,26,27,0.98)" : "rgba(230,234,227,0.7)",
         boxShadow: darkMode
           ? "0 4px 32px rgba(24,26,27,0.18)"
           : "0 4px 32px rgba(156,175,136,0.08)",
@@ -84,7 +84,9 @@ const SectionCard: React.FC<SectionCardProps> = ({
         ...style,
       }}
     >
+      <div className="card-accent" />
       {children}
+      <div className="card-accent" />
     </div>
   );
 };

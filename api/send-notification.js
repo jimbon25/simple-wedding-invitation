@@ -83,7 +83,7 @@ export default async function handler(req, res) {
   };
 
   // Parse the request body
-  let guestName, guestMessage, attendance, platform, recaptchaToken, messageType, guests, foodPreference;
+  let guestName, guestMessage, attendance, platform, messageType, guests, foodPreference;
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     guestName = body.name?.trim();
@@ -91,7 +91,7 @@ export default async function handler(req, res) {
     attendance = body.attendance;
     guests = body.guests;
     foodPreference = body.foodPreference;
-    recaptchaToken = body.token;
+  // ...existing code...
     // Get message type: 'rsvp' or 'guestbook'
     messageType = body.type || 'rsvp';
     // Platform can be 'discord', 'telegram', or 'all' (default)
@@ -110,44 +110,6 @@ export default async function handler(req, res) {
     });
   }
   
-  // Verify reCAPTCHA token
-  const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
-  if (!RECAPTCHA_SECRET_KEY) {
-    console.error('RECAPTCHA_SECRET_KEY tidak dikonfigurasi!');
-    return res.status(500).json({
-      error: 'Server Configuration Error',
-      message: 'reCAPTCHA tidak dikonfigurasi dengan benar'
-    });
-  }
-  
-  try {
-    // Verify reCAPTCHA token with Google
-    const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`
-    });
-    
-    const recaptchaData = await recaptchaResponse.json();
-    
-    if (!recaptchaData.success) {
-      console.log('Verifikasi reCAPTCHA gagal:', recaptchaData);
-      return res.status(400).json({
-        error: 'reCAPTCHA Verification Failed',
-        message: 'Verifikasi reCAPTCHA gagal',
-        errors: recaptchaData['error-codes']
-      });
-    }
-    
-    // If it reaches here, reCAPTCHA has been successfully verified
-    console.log('reCAPTCHA verification successful');
-  } catch (error) {
-    console.error('Error verifying reCAPTCHA:', error);
-    return res.status(500).json({
-      error: 'Server Error',
-      message: 'Terjadi kesalahan saat memverifikasi reCAPTCHA'
-    });
-  }
 
   // Log info about the request source
   console.log(`Request from: ${req.headers['x-forwarded-for'] || 'unknown'}`);

@@ -1,5 +1,5 @@
 // netlify/functions/functions-shared.js
-// This file contains the main code used by send-notification.js and verify-recaptcha.js
+// This file contains the main code used by send-notification.js
 const fetch = require('node-fetch');
 
 // Simple in-memory rate limiter (per instance, not global)
@@ -27,7 +27,7 @@ exports.sharedHandler = async function(event, context) {
   
   // Replace with your invitation domain
   const allowedOrigins = [
-    'https://your-site.netlify.app',
+    'https://invitation-dn.netlify.app/',
     process.env.REACT_APP_SITE_URL,
     'http://localhost:3000' // for development
   ].filter(Boolean);
@@ -54,10 +54,50 @@ exports.sharedHandler = async function(event, context) {
     };
   }
 
-  let token, name, message, attendance, guests, foodPreference, type;
+  let name, message, attendance, guests, foodPreference, type, body;
   try {
-    const body = JSON.parse(event.body);
-    token = body.token || body.recaptchaToken;
+    body = JSON.parse(event.body);
+    // Blacklist kata/email/nama tertentu
+    const blacklistPatterns = [
+      /promo|diskon|gratis|admin|test|dummy|iklan|penawaran|hadiah|bonus|tawaran|pinjaman|asuransi|investasi|tiktok|instagram|wa\.me|bit\.ly|shopee|tokopedia|bukalapak|gmail\.com|yahoo\.com|hotmail\.com|outlook\.com|gmx\.com|protonmail\.com|icloud\.com|mail\.ru|qq\.com|163\.com|126\.com|sina\.com|sohu\.com|aliyun\.com|foxmail\.com|example\.com|tempmail|mailinator|guerrillamail|10minutemail|disposable|spambot|www\.|http|https/i,
+      /\b(?:[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/, // email
+    ];
+    const combinedTextLower = `${body.name || ''} ${body.message || ''}`.toLowerCase();
+    for (const pattern of blacklistPatterns) {
+      if (pattern.test(combinedTextLower)) {
+        console.warn(`Blacklist content detected from IP ${ip}:`, combinedTextLower.substring(0, 100));
+        // Notifikasi admin Telegram jika konten blacklist terdeteksi
+        if (process.env.ADMIN_TELEGRAM_BOT_TOKEN && process.env.ADMIN_TELEGRAM_CHAT_ID) {
+          await fetch(`https://api.telegram.org/bot${process.env.ADMIN_TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: process.env.ADMIN_TELEGRAM_CHAT_ID,
+              text: `⚠ *SPAM/BLACKLIST DETECTED*\nIP: ${ip}\nName: ${body.name}\nMessage: ${body.message}\nType: ${body.type || '-'}\n`,
+              parse_mode: 'Markdown'
+            }),
+          });
+        }
+        return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ success: false, error: 'Konten terlarang terdeteksi.' }) };
+      }
+    }
+    // Honeypot anti-bot
+    if (body.website || body.contact_number) {
+      return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ success: false, error: 'Bot detected.' }) };
+    }
+
+    // Time-based validation (anti-bot)
+    if (body.formStart && body.formSubmit) {
+      const formStart = Number(body.formStart);
+      const formSubmit = Number(body.formSubmit);
+      if (!isNaN(formStart) && !isNaN(formSubmit)) {
+        const duration = formSubmit - formStart;
+        // Tolak jika isi form <2 detik (bot) atau >1 jam (kemungkinan abuse)
+        if (duration < 2000 || duration > 3600000) {
+          return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ success: false, error: 'Suspicious form timing.' }) };
+        }
+      }
+    }
     name = escapeMarkdown(String(body.name || body.nama || ''));
     message = escapeMarkdown(String(body.message || body.pesan || ''));
     attendance = escapeMarkdown(String(body.attendance || body.kehadiran || ''));
@@ -105,12 +145,27 @@ exports.sharedHandler = async function(event, context) {
   // Remove requests that are outside the window
   ipRequestLog[ip] = ipRequestLog[ip].filter(ts => now - ts < RATE_LIMIT_WINDOW);
   if (ipRequestLog[ip].length >= RATE_LIMIT_MAX) {
+    // Notifikasi admin Telegram jika rate limit terpicu (flood/spam)
+    if (process.env.ADMIN_TELEGRAM_BOT_TOKEN && process.env.ADMIN_TELEGRAM_CHAT_ID) {
+      const safeName = (body && body.name) ? body.name : '-';
+      const safeMessage = (body && body.message) ? body.message : '-';
+      const safeType = type || (body && body.type) || '-';
+      await fetch(`https://api.telegram.org/bot${process.env.ADMIN_TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: process.env.ADMIN_TELEGRAM_CHAT_ID,
+          text: `🚨 *RATE LIMIT/FLOOD DETECTED*\nIP: ${ip}\nType: ${safeType}\nName: ${safeName}\nMessage: ${safeMessage}\nCount: ${ipRequestLog[ip].length}\n`,
+          parse_mode: 'Markdown'
+        }),
+      });
+    }
     return {
       statusCode: 429,
       headers: {
         'Content-Type': 'application/json',
         'Retry-After': String(Math.ceil((RATE_LIMIT_WINDOW - (now - ipRequestLog[ip][0])) / 1000)),
-        'Access-Control-Allow-Origin': 'https://your-site.netlify.app',
+        'Access-Control-Allow-Origin': 'https://invitation-dn.netlify.app',
         'Vary': 'Origin'
       },
       body: JSON.stringify({ success: false, error: 'Terlalu banyak permintaan dari IP ini. Coba lagi nanti.' })
@@ -118,32 +173,11 @@ exports.sharedHandler = async function(event, context) {
   }
   ipRequestLog[ip].push(now);
 
-  // ...moved to top...
-
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers: corsHeaders, body: 'Method Not Allowed' };
   }
 
-  const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
-  if (!RECAPTCHA_SECRET_KEY) {
-    return { statusCode: 500, headers: corsHeaders, body: 'reCAPTCHA secret key not configured.' };
-  }
-
-
-  // ...existing code...
-
   try {
-    // 1. Verifikasi reCAPTCHA
-    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${RECAPTCHA_SECRET_KEY}&response=${token}`
-    });
-    const data = await response.json();
-    if (!data.success) {
-      return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ success: false, ...data }) };
-    }
-
     // 2. Telegram message format (triple backtick)
     let telegramText = '';
     if (type === 'rsvp') {
@@ -250,11 +284,16 @@ exports.sharedHandler = async function(event, context) {
     }
 
     if (!telegramResult.ok || !discordResult.ok) {
-      return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ success: false, error: 'Failed to send to Telegram or Discord' }) };
+  console.error('Failed to send to Telegram or Discord');
+  // Tetap return sukses agar user tidak terganggu
+  return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true, warning: 'Notifikasi gagal dikirim ke Telegram/Discord' }) };
     }
 
     return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ success: true }) };
   } catch (error) {
-    return { statusCode: 500, headers: corsHeaders, body: 'Failed to verify reCAPTCHA or send message.' };
+    return { statusCode: 500, headers: corsHeaders, body: 'Failed to send message.' };
   }
 };
+
+// Ekspor ipRequestLog agar bisa diakses dan direset dari test
+exports.ipRequestLog = ipRequestLog;

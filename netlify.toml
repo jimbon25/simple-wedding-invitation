@@ -1,9 +1,13 @@
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
 [build]
   command = "npm run build"
   publish = "build"
 
 [build.environment]
-  REACT_APP_SITE_URL = "https://your-site-url.netlify.app"
+  REACT_APP_SITE_URL = "https://invitation-dn.netlify.app/"
 
 [[redirects]]
   from = "/*"

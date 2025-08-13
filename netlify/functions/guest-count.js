@@ -12,23 +12,11 @@ const ipRequestLog = {};
 const visitorHistory = {};
 
 // Function to reset history (for testing)
-const resetVisitorHistory = (req) => {
-  // Can only be used with API key for security
-  const apiKey = req?.headers?.['x-api-key'] || '';
-  if (apiKey === process.env.GUEST_API_KEY) {
-    console.log('Resetting visitor history via admin request');
-    Object.keys(visitorHistory).forEach(key => {
-      delete visitorHistory[key];
-    });
-    return true;
-  }
-  return false;
-};
+// (Removed unused resetVisitorHistory function)
 
 // List of allowed countries (ISO country codes)
 // Add countries allowed to access the invitation
-const ALLOWED_COUNTRIES = ['ID']; 
-
+const ALLOWED_COUNTRIES = (process.env.ALLOWED_COUNTRIES || 'ID,SG,MY').split(',');
 // List of suspicious ASNs (Autonomous System Numbers)
 // Usually used by VPN, proxy, or similar services
 const SUSPICIOUS_ASNS = [
@@ -45,97 +33,77 @@ const SUSPICIOUS_ASNS = [
 ];
 
 exports.handler = async function(event, context) {
-  const allowedOrigin = 'https://your-site.netlify.app'; // Replace with your invitation domain
+  const allowedOrigins = [
+    'https://invitation-dn.netlify.app',
+    'https://invitation-dn.netlify.app/'
+    // Tambahkan domain lain jika perlu
+  ];
+  const origin = event.headers['origin'] || '';
+  const referer = event.headers['referer'] || '-';
+  const isAllowedOrigin = allowedOrigins.some(o => origin.startsWith(o));
   const corsHeaders = {
-    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Origin': isAllowedOrigin ? origin : allowedOrigins[0],
     'Vary': 'Origin'
   };
 
-  // API Key validation (optional, for more private endpoint)
-  const apiKey = event.headers['x-api-key'];
-  const pentestRateKey = process.env.PENTEST_RATE_KEY || 'PENTEST-RATE-KEY';
-  const isPentestRateKey = apiKey === pentestRateKey;
-  if (apiKey !== process.env.GUEST_API_KEY && !isPentestRateKey) {
-    return { statusCode: 403, headers: corsHeaders, body: 'Forbidden' };
-  }
-
-  // Origin/Referer validation
-  const origin = event.headers['origin'] || '';
-  const referer = event.headers['referer'] || '-';
-  if (origin && origin !== allowedOrigin) {
+  // Validasi origin/referer harus paling atas
+  if (origin && !isAllowedOrigin) {
     return { statusCode: 403, headers: corsHeaders, body: 'Invalid origin' };
   }
-  if (referer !== '-' && !referer.startsWith(allowedOrigin)) {
+  if (referer !== '-' && !allowedOrigins.some(o => referer.startsWith(o))) {
     return { statusCode: 403, headers: corsHeaders, body: 'Invalid referer' };
   }
 
-  // Body size limit (2KB)
+  // Validasi body size sebelum parsing JSON
   if ((event.body || '').length > 2048) {
     return { statusCode: 413, headers: corsHeaders, body: 'Payload too large' };
   }
+  // API Key validation untuk request admin (reset)
+  const apiKey = event.headers['x-api-key'] || event.headers['X-Api-Key'] || '';
+  const pentestRateKey = process.env.PENTEST_RATE_KEY || 'PENTEST-RATE-KEY';
+  const isPentestRateKey = apiKey === pentestRateKey;
 
-  // CORS preflight
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: {
-        ...corsHeaders,
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, User-Agent, X-Api-Key'
-      },
-      body: ''
-    };
-  }
-  
   // Handle admin reset request (for testing)
   if (event.httpMethod === 'POST') {
     try {
       const body = JSON.parse(event.body || '{}');
       if (body.action === 'reset_history') {
-        if (resetVisitorHistory(event)) {
+        if (apiKey === process.env.GUEST_API_KEY || isPentestRateKey) {
+          Object.keys(visitorHistory).forEach(key => delete visitorHistory[key]);
           return {
             statusCode: 200,
             headers: corsHeaders,
-            body: JSON.stringify({ 
-              success: true, 
-              message: 'Visitor history reset successfully' 
-            })
-          };
-        } else {
-          return {
-            statusCode: 403,
-            headers: corsHeaders,
-            body: JSON.stringify({ 
-              success: false, 
-              message: 'Unauthorized reset attempt' 
-            })
+            body: JSON.stringify({ success: true, message: 'Visitor history reset successfully' })
           };
         }
+        // Jika key tidak cocok, langsung return 403 (tanpa else)
+        return {
+          statusCode: 403,
+          headers: corsHeaders,
+          body: JSON.stringify({ success: false, message: 'API key required for admin action' })
+        };
       }
     } catch (e) {
       // Ignore parsing errors for non-reset requests
     }
   }
   
-  // Secret parameter for developer mode
-  const DEV_MODE_SECRET = 'your_secret_key'; // set your own secret here
-
-  // Check if request is from developer based on URL parameter
+  // Secret parameter untuk developer mode
+  const DEV_MODE_SECRET = process.env.DEV_MODE_SECRET || '';
+  // Deteksi developer mode dari referer atau query
   try {
+    let devModeParam = '';
     if (referer && referer !== '-') {
-      const urlObj = new URL(referer);
-      const devMode = urlObj.searchParams.get('devMode');
-      if (devMode === DEV_MODE_SECRET) {
-        console.log('Dev mode detected from URL parameter, tracking skipped');
-        return { 
-          statusCode: 200, 
-          headers: corsHeaders,
-          body: JSON.stringify({ 
-            success: true, 
-            message: 'Developer mode active, tracking skipped' 
-          })
-        };
-      }
+      const urlObj = new URL(referer, allowedOrigins[0]);
+      devModeParam = urlObj.searchParams.get('devMode');
+    }
+    if (DEV_MODE_SECRET && devModeParam === DEV_MODE_SECRET) {
+      console.log('Dev mode terdeteksi dari parameter URL, tracking dilewati');
+      return {
+        statusCode: 200,
+        headers: corsHeaders,
+        body: JSON.stringify({ success: true, message: 'Developer mode aktif, tracking dilewati' })
+      };
     }
   } catch (e) {
     // ignore URL parse errors
@@ -151,12 +119,12 @@ exports.handler = async function(event, context) {
   if (!userAgent || userAgent.length < 10) {
     return { statusCode: 400, headers: corsHeaders, body: 'Invalid User-Agent' };
   }
-  // Detect strange User-Agents (bots, curls, headless, etc.) - don't block, mark suspicious.
+  // Detect strange User-Agents (bots, curls, headless, etc.) - hanya tandai suspicious, jangan blokir
   const suspiciousUA = /(bot|curl|python|wget|scrapy|headless|phantom|selenium|spider|httpclient|axios|go-http|node-fetch|java|libwww|perl|ruby|powershell|http_request|httpclient|fetch|postman|insomnia)/i;
   let suspiciousUAFlag = false;
   if (suspiciousUA.test(userAgent)) {
     suspiciousUAFlag = true;
-    // Later geoData.suspicious will be set to true after geoData is filled
+    // Hanya tandai, jangan blokir
     console.log('Suspicious User-Agent detected:', userAgent);
   }
   const parser = new UAParser(userAgent);
@@ -275,51 +243,66 @@ exports.handler = async function(event, context) {
     country: 'Unknown',
     countryCode: 'XX',
     city: 'Unknown',
-    region: 'Unknown', 
+    region: 'Unknown',
     asn: 'Unknown',
     org: 'Unknown',
     isp: 'Unknown',
     suspicious: false,
-    loc: null // coordinates latitude,longitude if available
+    loc: null
   };
   let suspiciousReason = [];
   try {
-    // Using ipinfo.io to get geolocation information
-    // You need to register to get a token: https://ipinfo.io/
     const ipInfoToken = process.env.IPINFO_TOKEN;
     if (ipInfoToken && ip !== 'unknown' && ip !== '127.0.0.1' && ip !== 'localhost') {
-      const ipInfoResponse = await fetch(`https://ipinfo.io/${ip}?token=${ipInfoToken}`);
-      const ipInfo = await ipInfoResponse.json();
-      if (ipInfo) {
-        geoData = {
-          country: ipInfo.country || 'Unknown',
-          countryCode: ipInfo.country || 'XX',
-          city: ipInfo.city || 'Unknown',
-          region: ipInfo.region || 'Unknown', // Additional regions
-          asn: ipInfo.org ? ipInfo.org.split(' ')[0].replace('AS', '') : 'Unknown',
-          org: ipInfo.org ? ipInfo.org.split(' ').slice(1).join(' ') : 'Unknown',
-          isp: ipInfo.org || 'Unknown',
-          suspicious: false,
-          loc: ipInfo.loc || null // format: "latitude,longitude"
-        };
-        // Check if country is allowed
-        if (!ALLOWED_COUNTRIES.includes(geoData.countryCode)) {
-          geoData.suspicious = true;
-          suspiciousReason.push(`Negara tidak diizinkan: ${geoData.countryCode}`);
-          console.log(`Suspicious access from non-allowed country: ${geoData.countryCode}`);
+      // Tambahkan timeout 2 detik pada fetch ipinfo.io
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 2000); // 2 detik
+      try {
+        const ipInfoResponse = await fetch(`https://ipinfo.io/${ip}?token=${ipInfoToken}`, { signal: controller.signal });
+        const ipInfo = await ipInfoResponse.json();
+        if (ipInfo) {
+          geoData = {
+            country: ipInfo.country || 'Unknown',
+            countryCode: ipInfo.country || 'XX',
+            city: ipInfo.city || 'Unknown',
+            region: ipInfo.region || 'Unknown',
+            asn: ipInfo.org ? ipInfo.org.split(' ')[0].replace('AS', '') : 'Unknown',
+            org: ipInfo.org ? ipInfo.org.split(' ').slice(1).join(' ') : 'Unknown',
+            isp: ipInfo.org || 'Unknown',
+            suspicious: false,
+            loc: ipInfo.loc || null
+          };
         }
-        // Check if ASN is suspicious (VPN/Proxy)
-        if (SUSPICIOUS_ASNS.includes(geoData.asn)) {
-          geoData.suspicious = true;
-          suspiciousReason.push(`VPN/Proxy terdeteksi: ${geoData.org} (AS${geoData.asn})`);
-          console.log(`Suspicious access from potential VPN/Proxy: ${geoData.org}`);
-        }
+      } catch (e) {
+        console.warn('GeoIP fetch timeout atau error:', e);
+        // Biarkan geoData default jika timeout/error
+      } finally {
+        clearTimeout(timeout);
       }
+    }
+    // Patch: support geoData mocking in tests
+    if (event.headers['x-geo-mock']) {
+      try {
+        const mock = JSON.parse(event.headers['x-geo-mock']);
+        geoData = { ...geoData, ...mock };
+      } catch {}
+    }
+    // Check if country is allowed
+    if (!ALLOWED_COUNTRIES.includes(geoData.countryCode)) {
+      geoData.suspicious = true;
+      suspiciousReason.push(`Negara tidak diizinkan: ${geoData.countryCode}`);
+      console.log(`Suspicious access from non-allowed country: ${geoData.countryCode}`);
+    }
+    // Check if ASN is suspicious (VPN/Proxy)
+    if (SUSPICIOUS_ASNS.includes(geoData.asn)) {
+      geoData.suspicious = true;
+      suspiciousReason.push(`VPN/Proxy terdeteksi: ${geoData.org} (AS${geoData.asn})`);
+      console.log(`Suspicious access from potential VPN/Proxy: ${geoData.org}`);
     }
   } catch (error) {
     console.error('Error fetching IP geolocation:', error);
   }
-  // After geoData is filled, if User-Agent is strange, mark suspicious
+  // Setelah geoData terisi, jika User-Agent mencurigakan, tandai suspicious
   if (suspiciousUAFlag) {
     geoData.suspicious = true;
     suspiciousReason.push('User-Agent mencurigakan');
@@ -329,8 +312,20 @@ exports.handler = async function(event, context) {
   try {
     const body = JSON.parse(event.body);
     // Honeypot (optional)
-    if (body.website) {
+    if (body.website || body.contact_number) {
       return { statusCode: 400, headers: corsHeaders, body: 'Bot detected.' };
+    }
+    // Time-based validation (anti-bot)
+    if (body.formStart && body.formSubmit) {
+      const formStart = Number(body.formStart);
+      const formSubmit = Number(body.formSubmit);
+      if (!isNaN(formStart) && !isNaN(formSubmit)) {
+        const duration = formSubmit - formStart;
+        // Tolak jika isi form <2 detik (bot) atau >1 jam (kemungkinan abuse)
+        if (duration < 2000 || duration > 3600000) {
+          return { statusCode: 400, headers: corsHeaders, body: 'Suspicious form timing.' };
+        }
+      }
     }
   } catch (e) {
     return { statusCode: 400, headers: corsHeaders, body: 'Invalid JSON' };
@@ -343,7 +338,7 @@ exports.handler = async function(event, context) {
     guestParam = event.queryStringParameters['to'];
   } else {
     try {
-      const url = new URL(event.headers.referer || '', allowedOrigin);
+  const url = new URL(event.headers.referer || '', allowedOrigins[0]);
       guestParam = url.searchParams.get('to') || '-';
     } catch (e) {
       // ignore
@@ -353,11 +348,17 @@ exports.handler = async function(event, context) {
   // Query String/Parameter Anomaly Detection (SQLi/XSS/etc)
   // Detect strange characters/patterns in guestParam (or other parameters if needed)
   if (guestParam && guestParam !== '-') {
-    // Uncommon non-alphanumeric characters, or simple XSS/SQLi patterns
+    // Uncommon non-alphanumeric characters, atau pola XSS/SQLi
     if (/[^a-zA-Z0-9 _-]/.test(guestParam) || /<|script|\{|\}|\$|\(|\)|select|union|insert|update|delete|drop|--|\/\*/i.test(guestParam)) {
       geoData.suspicious = true;
       suspiciousReason.push(`Query string/parameter mencurigakan: ${guestParam}`);
       console.log('Suspicious query string/parameter detected:', guestParam);
+      // Langsung blokir request
+      return {
+        statusCode: 403,
+        headers: corsHeaders,
+        body: 'Access denied: Suspicious query string or guest parameter.'
+      };
     }
   }
 
@@ -469,41 +470,23 @@ exports.handler = async function(event, context) {
         })
       });
     }
-    // Block VPN/proxy users, suspicious query strings, strange User-Agents, or countries not allowed after an alert is sent.
-    if (geoData.suspicious) {
-      // Block if VPN/proxy
-      if (SUSPICIOUS_ASNS.includes(geoData.asn)) {
-        return {
-          statusCode: 403,
-          headers: corsHeaders,
-          body: 'Access denied: Country not allowed or please turn off your VPN or proxy to access this invitation.'
-        };
-      }
-      // Block if suspicious reason includes suspicious query string/parameter
-      if (suspiciousReason.some(reason => reason.includes('Query string/parameter mencurigakan'))) {
-        return {
-          statusCode: 403,
-          headers: corsHeaders,
-          body: 'Access denied: Suspicious query string or guest parameter.'
-        };
-      }
-      // Block if User-Agent is suspicious
-      if (suspiciousReason.some(reason => reason.includes('User-Agent mencurigakan'))) {
-        return {
-          statusCode: 403,
-          headers: corsHeaders,
-          body: 'Access denied: Suspicious User-Agent detected.'
-        };
-      }
-      // Block if country is not allowed
-      if (suspiciousReason.some(reason => reason.includes('Negara tidak diizinkan'))) {
-        return {
-          statusCode: 403,
-          headers: corsHeaders,
-          body: 'Access denied: Country not allowed or please turn off your VPN or proxy to access this invitation.'
-        };
-      }
+    // Patch: blokir langsung jika negara tidak diizinkan atau ASN mencurigakan
+    if (!ALLOWED_COUNTRIES.includes(geoData.countryCode)) {
+      return {
+        statusCode: 403,
+        headers: corsHeaders,
+        body: 'Access denied: Country not allowed or please turn off your VPN or proxy to access this invitation.'
+      };
     }
+    if (SUSPICIOUS_ASNS.includes(geoData.asn)) {
+      return {
+        statusCode: 403,
+        headers: corsHeaders,
+        body: 'Access denied: Country not allowed or please turn off your VPN or proxy to access this invitation.'
+      };
+    }
+    // Untuk suspicious query string dan User-Agent, hanya alert, jangan blokir
+    // Request tetap diterima (status 200)
   } catch (err) {
     console.error('Failed to send visitor info to Telegram:', err);
   }

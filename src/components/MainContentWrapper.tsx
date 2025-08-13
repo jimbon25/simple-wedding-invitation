@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import Footer from "./Footer";
 import ScrollToTopButton from "./ScrollToTopButton";
-import SectionSeparator from "./SectionSeparator";
 import SectionCard from "./SectionCard";
 import "./MainContentBg.css";
 
@@ -53,28 +52,28 @@ const MainContentWrapper: React.FC<MainContentWrapperProps> = ({
         <div id="section-home">
           <Home />
         </div>
+        <div className="section-divider" />
         <div
-          style={{
-            width: "100vw",
-            position: "relative",
-            left: "50%",
-            right: "50%",
-            marginLeft: "-50vw",
-            marginRight: "-50vw",
-          }}
+          id="section-couple-profile"
+          className="container py-2 px-3 px-md-4"
         >
-          <SectionSeparator />
+          <SectionCard darkMode={darkMode} delay={40}>
+            {React.createElement(require("./CoupleProfile").default)}
+          </SectionCard>
         </div>
+        <div className="section-divider" />
         <div id="section-our-story" className="container py-2 px-3 px-md-4">
           <SectionCard darkMode={darkMode} delay={80}>
             <OurStory />
           </SectionCard>
         </div>
+        <div className="section-divider" />
         <div id="section-event-details" className="container py-2 px-3 px-md-4">
           <SectionCard darkMode={darkMode} delay={160}>
             <EventDetails />
           </SectionCard>
         </div>
+        <div className="section-divider" />
         <div id="section-gallery" className="container py-2 px-3 px-md-4">
           <SectionCard darkMode={darkMode} delay={240}>
             <div style={{ overflow: "visible", width: "100%" }}>
@@ -82,6 +81,7 @@ const MainContentWrapper: React.FC<MainContentWrapperProps> = ({
             </div>
           </SectionCard>
         </div>
+        <div className="section-divider" />
         <div
           id="section-rsvp-guestbook"
           className="container py-2 px-3 px-md-4"
@@ -90,11 +90,13 @@ const MainContentWrapper: React.FC<MainContentWrapperProps> = ({
             <RSVPAndGuestBook />
           </SectionCard>
         </div>
+        <div className="section-divider" />
         <div id="section-gift-info" className="container py-2 px-3 px-md-4">
           <SectionCard darkMode={darkMode} delay={400}>
             <GiftInfo />
           </SectionCard>
         </div>
+        <div className="section-divider" />
         <div
           id="section-accommodation-info"
           className="container py-2 px-3 px-md-4"
@@ -103,11 +105,13 @@ const MainContentWrapper: React.FC<MainContentWrapperProps> = ({
             <AccommodationInfo />
           </SectionCard>
         </div>
+        <div className="section-divider" />
         <div id="section-gift-registry" className="container py-2 px-3 px-md-4">
           <SectionCard darkMode={darkMode} delay={560}>
             <GiftRegistry />
           </SectionCard>
         </div>
+        <div className="section-divider" />
 
         {/* Thank You Section */}
         <div id="section-thank-you">

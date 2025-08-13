@@ -30,12 +30,8 @@ const ThankYouSection: React.FC = () => {
       <SectionCard
         darkMode={isDarkMode}
         style={{
-          background: isDarkMode
-            ? "rgba(24,26,27,0.98)"
-            : "rgba(230,234,227,0.7)",
           textAlign: "center",
           minHeight: 180,
-          border: isDarkMode ? "1.8px solid #EEE" : "1.8px solid #7a8c6a",
         }}
       >
         <StoryItem>
@@ -50,10 +46,7 @@ const ThankYouSection: React.FC = () => {
               marginBottom: 12,
             }}
           >
-            <span
-              className="bi bi-heart-fill"
-              style={{ fontSize: "2rem", color: "#9CAF88" }}
-            ></span>
+            <span style={{ fontSize: "2rem", color: "#9CAF88" }}></span>
             <InViewTransition animationType="slide-down">
               <TransText textKey="thank_you_title" animationType="fade" />
             </InViewTransition>

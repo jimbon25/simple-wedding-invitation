@@ -26,8 +26,8 @@ const resetVisitorHistory = (req) => {
 };
 
 // List of allowed countries (ISO country codes)
-// Add countries allowed to access the invitation
-const ALLOWED_COUNTRIES = ['ID'];
+// Use environment variable for allowed countries, fallback to ['ID']
+const ALLOWED_COUNTRIES = (process.env.ALLOWED_COUNTRIES ? process.env.ALLOWED_COUNTRIES.split(',') : ['ID']);
 
 // List of suspicious ASNs (Autonomous System Numbers)
 // Usually used by VPN, proxy, or similar services
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
   }
   
   // Secret parameter for developer mode
-  const DEV_MODE_SECRET = 'your_secret_key'; // set your own secret here
+  const DEV_MODE_SECRET = process.env.DEV_MODE_SECRET || 'your_secret_key'; // fallback for local/dev
 
   // Check if the request is from developer based on URL parameter
   try {

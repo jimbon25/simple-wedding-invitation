@@ -15,7 +15,20 @@ const GiftRegistry: React.FC = () => {
   };
 
   return (
-    <div>
+    <div
+      className="gift-registry-section"
+      style={{
+        background: "rgba(154, 175, 136, 0.18)",
+        backdropFilter: "blur(8px)",
+        border: "none",
+        borderRadius: "24px",
+        boxShadow: "none",
+        outline: "none",
+        margin: 0,
+        padding: "24px",
+        transition: "background 0.3s",
+      }}
+    >
       {/* Toast notification for copy to clipboard */}
       {copied && (
         <div
@@ -45,11 +58,25 @@ const GiftRegistry: React.FC = () => {
           90% { opacity: 1; }
           100% { opacity: 0; }
         }
+        .gift-registry-section {
+          background: rgba(154, 175, 136, 0.18);
+          backdrop-filter: blur(8px);
+          border: none !important;
+          border-radius: 24px !important;
+          box-shadow: none !important;
+          outline: none !important;
+          margin: 0 !important;
+          padding: 24px !important;
+          transition: background 0.3s;
+        }
+        body.dark-mode .gift-registry-section {
+          background: rgba(24, 32, 24, 0.82) !important;
+        }
       `}</style>
       <StoryItem>
         <h2 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <span
-            className="bi bi-gift-fill"
+            className="bi bi-gift-fill section-icon-pulse"
             style={{ fontSize: "2rem", color: "#9CAF88" }}
           ></span>
           {language === "en" ? "Gift Registry" : "Daftar Hadiah"}
@@ -61,19 +88,7 @@ const GiftRegistry: React.FC = () => {
             justifyContent: "center",
             margin: "16px 0 12px 0",
           }}
-        >
-          <hr
-            style={{
-              border: "none",
-              height: "3px",
-              width: "70%",
-              maxWidth: "420px",
-              background: "#7a8c6a",
-              borderRadius: "2px",
-              boxShadow: "0 2px 8px rgba(122,140,106,0.18)",
-            }}
-          />
-        </div>
+        ></div>
       </StoryItem>
       <StoryItem delay="0.2s">
         <p>

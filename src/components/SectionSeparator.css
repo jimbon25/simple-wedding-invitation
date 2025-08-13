@@ -3,7 +3,7 @@
   height: 24px;
   margin: 24px auto;
   border-radius: 16px;
-  background: linear-gradient(90deg, #b7c9a8 0%, #e0e8d4 100%);
-  filter: blur(6px);
-  opacity: 0.7;
+  background: none;
+  filter: none;
+  opacity: 0;
 }

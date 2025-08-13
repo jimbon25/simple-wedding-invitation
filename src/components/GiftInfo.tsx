@@ -30,11 +30,24 @@ const GiftInfo: React.FC = () => {
         };
 
   return (
-    <div>
+    <div
+      className="gift-info-section"
+      style={{
+        background: "rgba(154, 175, 136, 0.18)",
+        backdropFilter: "blur(8px)",
+        border: "none",
+        borderRadius: "24px",
+        boxShadow: "none",
+        outline: "none",
+        margin: 0,
+        padding: "24px",
+        transition: "background 0.3s",
+      }}
+    >
       <StoryItem>
         <h2 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <span
-            className="bi bi-gift-fill"
+            className="bi bi-gift-fill section-icon-pulse"
             style={{ fontSize: "2rem", color: "#9CAF88" }}
           ></span>
           <InViewTransition animationType="slide-down">
@@ -48,19 +61,7 @@ const GiftInfo: React.FC = () => {
             justifyContent: "center",
             margin: "16px 0 12px 0",
           }}
-        >
-          <hr
-            style={{
-              border: "none",
-              height: "3px",
-              width: "70%",
-              maxWidth: "420px",
-              background: "#7a8c6a",
-              borderRadius: "2px",
-              boxShadow: "0 2px 8px rgba(122,140,106,0.18)",
-            }}
-          />
-        </div>
+        ></div>
       </StoryItem>
       <StoryItem delay="0.2s">
         <p>

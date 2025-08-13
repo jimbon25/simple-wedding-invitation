@@ -57,37 +57,30 @@ const OurStory: React.FC = () => {
         };
 
   return (
-    <div>
+    <div
+      className="our-story-section"
+      style={{
+        background: "rgba(154, 175, 136, 0.18)",
+        backdropFilter: "blur(8px)",
+        border: "none",
+        borderRadius: "24px",
+        boxShadow: "none",
+        outline: "none",
+        margin: 0,
+        padding: "24px",
+        transition: "background 0.3s",
+      }}
+    >
       <StoryItem>
         <h2 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <span
-            className="bi bi-book-fill"
+            className="bi bi-book-fill section-icon-pulse"
             style={{ fontSize: "2rem", color: "#9CAF88" }}
           ></span>
           <InViewTransition animationType="slide-down">
             {storyContent.title}
           </InViewTransition>
         </h2>
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            margin: "16px 0 12px 0",
-          }}
-        >
-          <hr
-            style={{
-              border: "none",
-              height: "3px",
-              width: "70%",
-              maxWidth: "420px",
-              background: "#7a8c6a",
-              borderRadius: "2px",
-              boxShadow: "0 2px 8px rgba(122,140,106,0.18)",
-            }}
-          />
-        </div>
       </StoryItem>
       <StoryItem delay="0.2s">
         <p>
@@ -129,7 +122,11 @@ const OurStory: React.FC = () => {
         <StoryItem delay="1.2s">
           <div
             className="video-container embed-responsive embed-responsive-16by9"
-            style={{ height: "400px" }}
+            style={{
+              height: "400px",
+              borderRadius: "24px",
+              overflow: "hidden",
+            }}
           >
             <video
               ref={videoRef}
@@ -137,7 +134,7 @@ const OurStory: React.FC = () => {
               playsInline
               preload="none"
               className="embed-responsive-item"
-              style={{ width: "100%", height: "100%" }}
+              style={{ width: "100%", height: "100%", borderRadius: "24px" }}
               poster="/images/g9.webp"
             >
               <source src={videoSrc} type="video/mp4" />

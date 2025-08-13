@@ -1,46 +1,48 @@
+> **Note:** This version does not use Google reCAPTCHA or any captcha. All anti-spam and bot protection is handled by backend logic (honeypot, blacklist, time-based validation, rate limiting, and admin notification).
+
+> **Security Notice:** If you discover any vulnerability in this project, please contact the author: jimbonluis90@gmail.com
+
 # Simple Wedding Invitation
 
 <p align="center">
+  <a href="https://app.netlify.com/projects/invitation-dn/deploys">
+    <img src="https://api.netlify.com/api/v1/badges/a3d51b63-c999-4e01-823f-b52ee8e7b7a4/deploy-status" alt="Netlify Status" height="150" />
+  </a>
   <a href="https://github.com/jimbon25/simple-wedding-invitation/actions/workflows/ci.yml">
-    <img src="https://github.com/jimbon25/simple-wedding-invitation/actions/workflows/ci.yml/badge.svg" alt="CI Status" height="120" />
+    <img src="https://github.com/jimbon25/simple-wedding-invitation/actions/workflows/ci.yml/badge.svg" alt="CI Status" height="150" />
   </a>
   </a>
   <a href="LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat-square" alt="MIT License" height="120" />
+    <img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat-square" alt="MIT License" height="150" />
   </a>
   <a href="https://nodejs.org/">
-    <img src="https://img.shields.io/badge/node.js-16%20%7C%2018%20%7C%2020-brightgreen?style=flat-square" alt="Node.js Version" height="120" />
+    <img src="https://img.shields.io/badge/node.js-16%20%7C%2018%20%7C%2020-brightgreen?style=flat-square" alt="Node.js Version" height="150" />
   </a>
   <a href="https://github.com/jimbon25/simple-wedding-invitation/commits/main">
-    <img src="https://img.shields.io/github/last-commit/jimbon25/simple-wedding-invitation?logo=github&style=flat-square" alt="Last Commit" height="120" />
+    <img src="https://img.shields.io/github/last-commit/jimbon25/simple-wedding-invitation?logo=github&style=flat-square" alt="Last Commit" height="150" />
   </a>
   <a href="https://reactjs.org/">
-    <img src="https://img.shields.io/badge/react-19.1.0-61DAFB.svg?logo=react&style=flat-square" alt="React Version" height="120" />
+    <img src="https://img.shields.io/badge/react-19.1.0-61DAFB.svg?logo=react&style=flat-square" alt="React Version" height="150" />
   </a>
   <a href="#enhanced-visitor-tracking-system">
-    <img src="https://img.shields.io/badge/analytics-suspect%20tracking-orange?style=flat-square" alt="Visitor Tracking" height="120" />
+    <img src="https://img.shields.io/badge/analytics-suspect%20tracking-orange?style=flat-square" alt="Visitor Tracking" height="150" />
   </a>
   <a href="https://ai.google.dev/gemini-api">
-    <img src="https://img.shields.io/badge/AI-Gemini%20Powered-purple?logo=google&style=flat-square" alt="Gemini AI" height="120" />
+    <img src="https://img.shields.io/badge/AI-Gemini%20Powered-purple?logo=google&style=flat-square" alt="Gemini AI" height="150" />
   </a>
   <a href="#multi-platform-support">
-    <img src="https://img.shields.io/badge/platforms-Netlify%20%7C%20Vercel-black?style=flat-square" alt="Platforms" height="120" />
+    <img src="https://img.shields.io/badge/platforms-Netlify%20%7C%20Vercel-black?style=flat-square" alt="Platforms" height="150" />
   </a>
   <a href="https://core.telegram.org/bots/api">
-    <img src="https://img.shields.io/badge/notifications-Telegram%20Bot-26A5E4?logo=telegram&style=flat-square" alt="Telegram Bot" height="120" />
+    <img src="https://img.shields.io/badge/notifications-Telegram%20Bot-26A5E4?logo=telegram&style=flat-square" alt="Telegram Bot" height="150" />
   </a>
   <a href="https://discord.com/developers/docs/resources/webhook">
-    <img src="https://img.shields.io/badge/notifications-Discord%20Webhook-5865F2?logo=discord&style=flat-square" alt="Discord Webhook" height="120" />
+    <img src="https://img.shields.io/badge/notifications-Discord%20Webhook-5865F2?logo=discord&style=flat-square" alt="Discord Webhook" height="150" />
   </a>
   <a href="https://ipinfo.io/">
-    <img src="https://img.shields.io/badge/security-IP%20Geolocation-blue?logo=internetexplorer&style=flat-square" alt="IP Geolocation" height="120" />
-  </a>
-  <a href="https://developers.google.com/recaptcha">
-    <img src="https://img.shields.io/badge/security-reCAPTCHA%20v2-4285F4?logo=google&style=flat-square" alt="Google reCAPTCHA" height="120" />
+    <img src="https://img.shields.io/badge/security-IP%20Geolocation-blue?logo=internetexplorer&style=flat-square" alt="IP Geolocation" height="150" />
   </a>
 </p>
-
-A digital wedding invitation web app built with React and TypeScript. This application provides a seamless, interactive experience for wedding guests with multi-language support, smooth animations, and robust security features. It includes personalized invitations, RSVP and guest book functionality protected by Google reCAPTCHA, real-time notification integration with Discord and Telegram, advanced visitor analytics with suspect session, and an GEMINI AI to assist your guests.
 
 <p align="center">
 <img src="public/images/screenshoot/ss1.webp" width="500" alt="Screenshot 1"/>
@@ -50,12 +52,13 @@ A digital wedding invitation web app built with React and TypeScript. This appli
 <img src="public/images/screenshoot/ss3.webp" width="500" alt="Screenshot 3"/>
 </p>
 
+This is a digital wedding invitation web app built with React and TypeScript. It provides a seamless, interactive experience for wedding guests with multi-language support, smooth animations, and robust security features. All anti-spam and bot protection is handled by backend logic (honeypot, blacklist, time-based validation, rate limiting, and admin notification)—no Google reCAPTCHA required. Features include personalized invitations, RSVP and guest book functionality, real-time notification integration with Discord and Telegram, advanced visitor analytics with suspect session, and a Gemini AI assistant for your guests.
+
 
 ## Table of Contents
 
 - [Main Features](#main-features)
 - [Stack](#stack)
-- [Installation](#installation)
 - [Configuration](#configuration)
   - [Environment Variables](#environment-variables)
   - [Notification Systems](#notification-systems)
@@ -63,7 +66,6 @@ A digital wedding invitation web app built with React and TypeScript. This appli
     - [Telegram Bot](#telegram-bot)
     - [Using Both Systems](#using-both-systems)
     - [Switching Between Systems](#switching-between-systems)
-  - [Google reCAPTCHA](#google-recaptcha)
   - [Gemini AI Chat](#gemini-ai-chat)
   - [IP Geolocation Security](#ip-geolocation-security)
 - [Deployment](#deployment)
@@ -72,11 +74,7 @@ A digital wedding invitation web app built with React and TypeScript. This appli
   - [Self Hosted/Server Deployment](#self-hosted/server-deployment)
   - [Multi-platform Support](#multi-platform-support)
 - [Security Measures](#security-measures)
-  - [Input Validation & Sanitization](#input-validation--sanitization)
   - [Rate Limiting](#rate-limiting)
-  - [CAPTCHA Protection](#captcha-protection)
-  - [Data Sanitization](#data-sanitization)
-  - [Security Configuration](#security-configuration)
 - [Customization Guide](#customization-guide)
   - [Available Scripts](#available-scripts)
   - [Node.js Version](#nodejs-version)
@@ -84,12 +82,10 @@ A digital wedding invitation web app built with React and TypeScript. This appli
 - [Terms of Service](#term-of-service)
 - [Contact](#contact)
 - [Acknowledgements](#acknowledgements)
-- [License](#license)
 
 ## Main Features
 
 - Personalized invitation with guest name and multi-language support
-- RSVP & Guest Book forms (protected by Google reCAPTCHA)
 - Gallery with progressive image loading
 - Gift info & registry
 - Real-time notifications (Telegram & Discord)
@@ -114,14 +110,13 @@ A digital wedding invitation web app built with React and TypeScript. This appli
 - [Vercel API Routes](https://vercel.com/docs/functions/serverless-functions)
 
 ### Security & Privacy
-- [Google reCAPTCHA](https://developers.google.com/recaptcha) (Form RSVP, guest book Protection)
 - [IPinfo.io](https://ipinfo.io/) (ASN detection)
 
 ### Notifications & Integration
 - [Discord Webhooks](https://discord.com/developers/docs/resources/webhook) (RSVP, guest book)
 - [Telegram Bot API](https://core.telegram.org/bots/api) (RSVP, guest book, suspect/bot alerts)
 
-### AI
+### AI assistant
 - [Google Gemini API](https://ai.google.dev/gemini-api) (Q&A Feauture)
 
 ## Installation
@@ -159,7 +154,6 @@ Set these environment variables on your hosting platform:
 | `SUSPECT_BOT_TOKEN` | ✓ | ✓ | Telegram bot token for suspect notification |
 | `SUSPECT_CHAT_ID` | ✓ | ✓ | Chat ID to receive notifications for suspect |
 | `DISCORD_WEBHOOK_URL` | ✓ | ✓ | Your Discord channel webhook URL |
-| `RECAPTCHA_SECRET_KEY` | ✓ | ✓ | reCAPTCHA v2 secret key (server side) |
 | `TELEGRAM_BOT_TOKEN` | ✓ | ✓ | Your Telegram bot token |
 | `TELEGRAM_CHAT_ID` | ✓ | ✓ | Chat ID to send notifications |
 | `GEMINI_API_KEY` | ✓ | ✓ | Google Gemini API key |
@@ -169,12 +163,13 @@ Set these environment variables on your hosting platform:
 | `ANALYTICS_CHAT_ID` | ✓ | ✓ | Chat ID for analytics data |
 | `IPINFO_TOKEN` | ✓ | ✓ | Token for IP Geolocation services |
 | `ALLOWED_COUNTRIES` | ✓ | ✓ | Comma-separated list of allowed country codes |
-| `REACT_APP_RECAPTCHA_SITE_KEY` | ✓ | ✗ | Public reCAPTCHA key (Netlify) |
 | `REACT_APP_GUEST_API_KEY` | ✓ | ✗ | Public guest API key (Netlify) |
 | `REACT_APP_SITE_URL` | ✓ | ✗ | Site URL for Netlify |
-| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | ✗ | ✓ | Public reCAPTCHA key (Vercel) |
 | `NEXT_PUBLIC_GUEST_API_KEY` | ✗ | ✓ | Public guest API key (Vercel) |
 | `NEXT_PUBLIC_SITE_URL` | ✗ | ✓ | Site URL for Vercel |
+| `ADMIN_TELEGRAM_BOT_TOKEN` | ✓ | ✓ | Used for admin such as blacklist etc |
+| `ADMIN_TELEGRAM_CHAT_ID` | ✓ | ✓ | Chat ID to receive notification |
+| `DEV_MODE_SECRET` | ✓ | ✓ | Developer you can add if you want to skip track |
 
 ### Notification Systems
 
@@ -238,21 +233,6 @@ To switch from Telegram to Discord:
 1. Add the Discord webhook URL as described above
 2. Remove or comment out the Telegram variables
 3. Redeploy your application
-
-### Google reCAPTCHA
-
-1. Register for reCAPTCHA v2:
-   - Go to [Google reCAPTCHA Admin](https://www.google.com/recaptcha/admin/create)
-   - Choose reCAPTCHA v2 ("I'm not a robot" Checkbox)
-   - Add your domain(s)
-   - Complete the registration
-
-2. Set environment variables:
-   - Server side: `RECAPTCHA_SECRET_KEY=your_secret_key`
-   - Client side (Netlify): `REACT_APP_RECAPTCHA_SITE_KEY=your_site_key`
-   - Client side (Vercel): `NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_site_key`
-
-3. For more information, see the [reCAPTCHA documentation](https://developers.google.com/recaptcha/docs/display)
 
 ### Gemini AI Chat
 
@@ -416,35 +396,7 @@ The application implements robust backend and frontend security measures:
 - **Privacy:** For normal visitors, backend API responses are minimal and do not expose analytics or statistics.
 - **Separate Analytics & Suspect Bots:** The system uses separate bots for analytics and suspect notifications. Normal guest activity is tracked by the analytics bot, while any suspicious or abnormal guest (VPN/proxy, non-Indonesia, bots, pentest attempts) is detected and reported by the suspect bot. This ensures that normal guests and suspect guests are clearly distinguished, and only suspicious activity triggers alerts to the suspect bot. The recorded data is strictly non-sensitive and public (such as browser, country, and visit time), never personal or private information. Alerts are only triggered by clear indicators of suspect activity, such as VPN/proxy usage, access from outside allowed countries, bot-like behavior, or pentest attempts.
 - **Suspect/Bot Notification:** All blocked or suspicious access (VPN/proxy, non-ID or you can custom, bots, pentest attempts) triggers real-time notifications to Telegram and/or Discord. Use `SUSPECT_BOT_TOKEN` and `SUSPECT_CHAT_ID` for suspect/bot alerts.
-- **Consistent Blocking:** Blocking and notification logic is consistent across Netlify and Vercel platforms.
-- **Pentest Support:** Dedicated API key for pentest/developer validation and backend testing.
 
-Other security measures include:
-
-### Input Validation & Sanitization
-
-- Frontend and backend validation with regex patterns
-- Length limits and character restrictions for inputs
-- HTML and Markdown escaping for user-generated content
-
-### CAPTCHA Protection
-
-- Google reCAPTCHA v2 integration on all forms
-- Server-side token verification
-- Environment variable configuration for site and secret keys
-
-### Data Sanitization
-
-- HTML escaping to prevent HTML injection
-- Markdown escaping for safe Discord/Telegram message formatting
-- Input trimming to remove unnecessary whitespace
-
-### Security Configuration
-
-IP Geolocation Configuration:
-- API: ipinfo.io for IP data retrieval
-- Country Filtering: Configurable list of allowed countries
-- ASN Detection: Blocks known suspicious autonomous system networks
 
 ## Customization Guide
 
@@ -457,18 +409,16 @@ The wedding invitation app is designed to be easily customized to fit your speci
    - Background images: Replace `/public/images/background.webp` and related images
    - Thumbnail weill generation automatic: Use `scripts/generate-thumbnails.js` to create optimized thumbnails
 
-### Available Scripts
+### Available Scripts & testing backend
 
 - `npm start`: Run development server
 - `npm test`: Run tests
-- `npm run build`: Create production build
-- `npm run generate-thumbnails`: Automatic create thumbnails for build better production
-- `pentest_guest_suspect.py`: For developer you can test whether all analytics and suspect bots are running normally or not.
+- `npm run generate-thumbnails`: Automatic create thumbnails then `npm run build` for better production 
+- `node --experimental-vm-modules ./node_modules/.bin/jest api/tests`: Test backend api vercel & `npm run test:backend`: Test backend netlify/unction both run on root folder
 
 ### Node.js Version
 
 Recommended Node.js versions: **16.x**, **18.x**, or **20.x** [Node.js](https://nodejs.org/)
-
 
 ## Disclaimer
 
@@ -480,7 +430,6 @@ By using this project, you agree to the following terms:
 
 - This project is developed and maintained by me ([github.com/jimbon25](https://github.com/jimbon25)).
 - The project uses several external APIs and services. You must comply with the terms of service of each provider:
-  - [Google reCAPTCHA](https://www.google.com/recaptcha/about/terms.html)
   - [Google Gemini API](https://ai.google.dev/terms)
   - [IPinfo.io](https://ipinfo.io/developers/terms)
   - [Telegram Bot API](https://core.telegram.org/bots/api#terms)
@@ -503,14 +452,10 @@ Special thanks to the following libraries, services, and contributors that make 
 - [Bootstrap](https://getbootstrap.com/)
 - [AOS (Animate On Scroll)](https://michalsnik.github.io/aos/)
 - [Slick Carousel](https://kenwheeler.github.io/slick/)
-- [Google reCAPTCHA](https://developers.google.com/recaptcha)
 - [Google Gemini API](https://ai.google.dev/gemini-api)
 - [IPinfo.io](https://ipinfo.io/)
 - [Telegram Bot API](https://core.telegram.org/bots/api)
 - [Discord Webhooks](https://discord.com/developers/docs/resources/webhook)
 
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
 
 

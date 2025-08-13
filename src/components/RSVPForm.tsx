@@ -1,18 +1,14 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import ToastNotification from "./ToastNotification";
 import StoryItem from "./StoryItem";
 import { SecurityUtils } from "../utils/security";
 import { useLanguage } from "../utils/LanguageContext";
 import { getApiEndpoint } from "../utils/apiUtils";
 import { TransText } from "../utils/TransitionComponents";
-
-// Lazy load ReCAPTCHA to improve initial load time
-const ReCAPTCHA = lazy(() => import("react-google-recaptcha"));
 const RSVPForm: React.FC = () => {
+  const [formStart] = useState(Date.now());
   const { t, language } = useLanguage();
   const [name, setName] = useState("");
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [captchaError, setCaptchaError] = useState("");
   const [attendance, setAttendance] = useState("");
   const [guests, setGuests] = useState<number>(0);
   const [foodPreference, setFoodPreference] = useState("");
@@ -43,7 +39,6 @@ const RSVPForm: React.FC = () => {
     setNameError("");
     setAttendanceError("");
     setGuestsError("");
-    setCaptchaError("");
 
     let isValid = true;
 
@@ -72,16 +67,12 @@ const RSVPForm: React.FC = () => {
       isValid = false;
     }
 
-    if (!captchaToken) {
-      setCaptchaError("Mohon verifikasi captcha.");
-      isValid = false;
-    }
-
     if (!isValid) {
       setIsSubmitting(false);
       return;
     }
 
+    const formSubmit = Date.now();
     const payload = {
       type: "rsvp",
       name: name.trim(),
@@ -89,7 +80,8 @@ const RSVPForm: React.FC = () => {
       guests,
       foodPreference,
       message: message.trim(),
-      token: captchaToken, // use the 'token' field for consistency with the backend
+      formStart,
+      formSubmit,
     };
 
     // Get appropriate API endpoint based on environment
@@ -120,7 +112,6 @@ const RSVPForm: React.FC = () => {
         setAttendance("");
         setGuests(0);
         setFoodPreference("");
-        setCaptchaToken(null);
       } else if (response.status === 429) {
         setMessage(
           language === "en"
@@ -199,6 +190,15 @@ const RSVPForm: React.FC = () => {
           <input
             type="text"
             name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            style={{ display: "none" }}
+            aria-hidden="true"
+          />
+          {/* Honeypot field tambahan */}
+          <input
+            type="text"
+            name="contact_number"
             tabIndex={-1}
             autoComplete="off"
             style={{ display: "none" }}
@@ -340,37 +340,6 @@ const RSVPForm: React.FC = () => {
               </div>
             </>
           )}
-          <div className="mb-3">
-            <Suspense
-              fallback={
-                <div
-                  className="d-flex align-items-center justify-content-center p-3 bg-light rounded"
-                  style={{ height: "78px", width: "302px" }}
-                >
-                  <div
-                    className="spinner-border spinner-border-sm text-secondary me-2"
-                    role="status"
-                  ></div>
-                  <span>Loading reCAPTCHA...</span>
-                </div>
-              }
-            >
-              <ReCAPTCHA
-                sitekey={
-                  process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
-                  "your_recaptcha_site_key"
-                }
-                onChange={(token) => {
-                  setCaptchaToken(token);
-                  setCaptchaError("");
-                }}
-                asyncScriptOnLoad={() => console.log("reCAPTCHA loaded")}
-              />
-            </Suspense>
-            {captchaError && (
-              <div className="text-danger mt-2">{captchaError}</div>
-            )}
-          </div>
           <button
             type="submit"
             className="btn btn-primary"
