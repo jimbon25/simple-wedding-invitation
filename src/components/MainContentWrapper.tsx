@@ -53,6 +53,15 @@ const MainContentWrapper: React.FC<MainContentWrapperProps> = ({
           <Home />
         </div>
         <div className="section-divider" />
+        <div
+          id="section-couple-profile"
+          className="container py-2 px-3 px-md-4"
+        >
+          <SectionCard darkMode={darkMode} delay={40}>
+            {React.createElement(require("./CoupleProfile").default)}
+          </SectionCard>
+        </div>
+        <div className="section-divider" />
         <div id="section-our-story" className="container py-2 px-3 px-md-4">
           <SectionCard darkMode={darkMode} delay={80}>
             <OurStory />
